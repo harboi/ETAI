@@ -1,0 +1,184 @@
+#easy_admin:
+#    entities:
+#        # List the entity class name you want to manage
+#        - App\Entity\Product
+#        - App\Entity\Category
+#        - App\Entity\User
+easy_admin:
+    site_name: 'ETAI'
+    design:
+        color_scheme: 'dark' # dark | light
+        brand_color: '#34495e'
+        assets:
+            css:
+            js:
+        templates:
+            layout: '/backend/layout.html.twig'
+            menu: '/backend/menu.html.twig'
+        menu:
+            - { label: 'Accueil', route: 'accueil', default: true }
+            - label: 'Transmission'
+              icon: 'file'
+              children:
+                - { label: 'Soins', entity: 'Soin' }
+                - { label: 'Educatives', entity: 'Educative' }
+            - label: 'Résidents'
+              icon: 'users'
+              children:
+                - { label: 'Actuels', entity: 'Residents_actuels'}
+                - { label: 'Passés', entity: 'Residents_passes'}
+            - { label: 'Personnel', entity: 'Personnel', icon: 'user' }
+            - { label: 'Maisonnées', entity: 'Maisonnee', icon: 'home' }
+    formats:
+        date:     'd/m/Y'
+        time:     'H:i'
+        datetime: 'd/m/Y H:i'
+    list:
+        max_results: 20
+    entities:
+        Personnel:
+            class: App\Entity\User
+            label: 'Personnel'
+            list:
+                title: 'Liste du Personnel'
+                actions: ['show']
+                fields:
+                    - { property: 'isEducateur', type: 'boolean', label: 'Éducateur' }
+                    - { property: 'isSoignant', type: 'boolean', label: 'Soigant' }
+                    - nom
+                    - { property: 'prenom', label: 'Prénom'}
+                    - { property: 'username', label: 'Pseudo' }
+                    - { property: 'email', label: 'Adresse eMail', type: 'email' }
+            form:
+                fields:
+                    - { property: 'username', label: 'Pseudo'}
+                    - { property: 'password', type: 'password', label: 'Mot de Passe', }
+                    #- { property: 'updated_at', label: 'créé le', type: 'datetime', type_options: { widget: 'choice' } }
+                    #- { property: 'password', type: 'repeated', type_options: { first_options: { label: 'Mot de P' }, second_options: { label: 'Confirmer Mot de P' }, required: false } }
+                    - { property: 'email', label: 'Adresse eMail'}
+                    - nom
+                    - { property: 'prenom', label: 'Prénom'}
+                    - adresse
+                    - { property: 'isAdmin', label: 'Administrateur' }
+                    - { property: 'isEducateur', label: 'Éducateur' }
+                    - { property: 'isSoignant', label: 'Soignant' }
+                    - { property: 'isActive', label: 'Compte activé' }
+                    - { property: 'maisonnee', label: 'Maisonnée' }
+
+        Residents_actuels:
+            label: 'Résidents actuels'
+            class: App\Entity\Resident
+            show:
+                title: 'Fiche Résident'
+            list:
+                title: 'Liste des résidents'
+                dql_filter: 'entity.isActive = 1'
+                actions: ['show']
+                fields:
+                    - { property: 'image', type: 'image', base_path: '%app.path.resident_images%' }
+                    - prenom
+                    - nom
+            form:
+                title: 'Formulaire Résident'
+                fields:
+                    #- { property: 'createdAt', type: 'birthday', label: 'Résident depuis le' }
+                    - nom
+                    - { property: 'prenom', label: 'Prénom'}
+                    - adresse
+                    - { property: 'email', label: 'Adresse eMail'}
+                    - description
+                    - { property: 'imageFile', type: 'vich_image', label: 'Photo' }
+                    - { property: 'maisonnee', label: 'Maisonnée' }
+                    - { property: 'isActive', type: 'checkbox', label: 'Résident actuel' }
+                    #- { property: 'password', type: 'repeated', type_options: { first_options: { label: 'Mot de P' }, second_options: { label: 'Confirmer Mot de P' }, required: false } }
+                    - adresse
+
+        Residents_passes:
+            label: 'Résidents passés'
+            class: App\Entity\Resident
+            list:
+                title: 'Liste des résidents passés'
+                dql_filter: 'entity.isActive = 0'
+                actions: ['show']
+                fields:
+                    - { property: 'image', type: 'image', base_path: '%app.path.resident_images%' }
+                    - prenom
+                    - nom
+            form:
+                label: 'Formulaire Résident'
+                fields:
+                    #- { property: 'createdAt', type: 'birthday', label: 'Résident depuis le' }
+                    - nom
+                    - { property: 'prenom', label: 'Prénom'}
+                    - adresse
+                    - { property: 'email', label: 'Adresse eMail'}
+                    - description
+                    - { property: 'imageFile', type: 'vich_image', label: 'Photo' }
+                    - { property: 'maisonnee', label: 'Maisonnée' }
+                    - { property: 'isActive', type: 'checkbox', label: 'Résident actuel' }
+                    #- { property: 'password', type: 'repeated', type_options: { first_options: { label: 'Mot de P' }, second_options: { label: 'Confirmer Mot de P' }, required: false } }
+                    - adresse
+        Educative:
+            class: App\Entity\Transmission
+            show:
+                title: 'Fiche de Transmission éducative'
+            list:
+                title: 'Liste des Transmissions éducatives'
+                dql_filter: 'entity.type = 0'
+                actions: ['show']
+                fields:
+                    - { property: 'createdAt', label: 'Date' }
+                    - { property: 'name', label: 'Descriptif court' }
+                    - { property: 'description', label: 'Contenu soin' }
+            form:
+                title: 'Formulaire Transmission éducative'
+                fields:
+                    - { property: 'createdAt', label: 'Date' }
+                    - { property: 'type', label: 'Type', type: 'choice', type_options: { choices: {'Soin':1, 'Educative':0 } } }
+                    - { property: 'name', label: 'Descriptif court' }
+                    - { property: 'description', label: 'Contenu Educatif' }
+                    - { property: 'alerteSoin', label: 'Alerte Soin' }
+                    - { property: 'user', label: 'Personnel' }
+                    - { property: 'resident', label: 'Résident' }
+                    - { property: 'maisonnee', label: 'Maisonnée' }
+
+        Soin:
+            class: App\Entity\Transmission
+            show:
+                title: 'Fiche de Transmission de soin'
+            list:
+                title: 'Liste des Transmissions de soins'
+                dql_filter: 'entity.type = 1'
+                actions: ['show']
+                fields:
+                    - { property: 'createdAt', label: 'Date' }
+                    - { property: 'name', label: 'Descriptif court' }
+                    - { property: 'description', label: 'Contenu soin' }
+            form:
+                title: 'Formulaire Transmission de soin'
+                fields:
+                    - { property: 'createdAt', label: 'Date' }
+                    - { property: 'type', label: 'Type', type: 'choice', type_options: { choices: {'Soin':1, 'Educative':0 } } }
+                    - { property: 'name', label: 'Descriptif court' }
+                    - { property: 'description', label: 'Contenu Soin' }
+                    - { property: 'user', label: 'Personnel' }
+                    - { property: 'resident', label: 'Résident' }
+                    - { property: 'maisonnee', label: 'Maisonnée' }
+
+        Maisonnee:
+            class: App\Entity\Maisonnee
+            show:
+                title: 'Fiche Maisonnée'
+            list:
+                title: 'Liste des Maisonnées'
+                actions: ['show']
+                fields:
+                      - { property: 'name', label: 'Nom' }
+                      - { property: 'users', label: 'Personnel' }
+                      - { property: 'residents', label: 'Résidents' }
+                      - { property: 'transmissions', label: 'Transmissions' }
+            form:
+                title: 'Formulaire Maisonnée'
+                fields:
+                    - { property: 'name', label: 'Nom', type: 'text' }
+                    - { property: 'description', label: 'Descriptif' }

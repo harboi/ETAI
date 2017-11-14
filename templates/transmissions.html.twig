@@ -1,0 +1,13 @@
+{% extends "/backend/layout.html.twig" %}
+
+{% block main %}
+    <ul>
+        {% for transmission in transmissions %}
+            <li>
+                <a href="#">{{ transmission.name|e }}</a>
+            </li>
+        {% else %}
+            vide
+        {% endfor %}
+    </ul>
+{% endblock %}
