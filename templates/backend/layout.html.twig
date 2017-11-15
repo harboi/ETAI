@@ -15,6 +15,10 @@
                 {{ easyadmin_config('_internal.custom_css')|raw }}
             </style>
         {% endblock %}
+        <link rel="stylesheet" href="/assets/css/bootstrap-datetimepicker.min.css">
+        <link rel="stylesheet" href="/assets/css/bootstrap-datetimepicker-standalone.css">
+        <link rel="stylesheet" href="/assets/css/bootstrap-datetimepicker.css">
+        <link rel="stylesheet" href="/assets/css/app.css">
 
         {% for css_asset in easyadmin_config('design.assets.css') %}
             <link rel="stylesheet" href="{{ asset(css_asset) }}">
@@ -152,11 +156,13 @@
         {% endblock wrapper %}
         </div>
 
-        {% block body_javascript %}{% endblock body_javascript %}
-
         {% for js_asset in easyadmin_config('design.assets.js') %}
             <script src="{{ asset(js_asset) }}"></script>
         {% endfor %}
+        {% block body_javascript %}{% endblock body_javascript %}
+        <script src="/assets/js/moment.min.js"></script>
+        <script src="/assets/js/bootstrap-datetimepicker.min.js"></script>
+        <script src="/assets/js/app.js"></script>
     </body>
     {% endblock body %}
 </html>

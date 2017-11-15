@@ -190,7 +190,7 @@ easy_admin:
             form:
                 title: 'Formulaire Transmission éducative'
                 fields:
-                    - { property: 'createdAt', label: 'Date' }
+                    - { property: 'createdAt', label: 'Date', css_class: 'date', type_options: { widget: 'single_text', 'format': 'dd/MM/yyyy H:mm', 'attr': { 'class': 'dateTimePicker' } } }
                     - { property: 'type', label: 'Type', type: 'choice', type_options: { choices: {'Soin':1, 'Educative':0 } } }
                     - { property: 'name', label: 'Descriptif court' }
                     - { property: 'description', label: 'Contenu Educatif' }
@@ -223,7 +223,7 @@ easy_admin:
             form:
                 title: 'Formulaire Transmission de soin'
                 fields:
-                    - { property: 'createdAt', label: 'Date' }
+                    - { property: 'createdAt', label: 'Date', css_class: 'date', type_options: { widget: 'single_text' } }
                     - { property: 'type', label: 'Type', type: 'choice', type_options: { choices: {'Soin':1, 'Educative':0 } } }
                     - { property: 'name', label: 'Descriptif court' }
                     - { property: 'description', label: 'Contenu Soin' }
