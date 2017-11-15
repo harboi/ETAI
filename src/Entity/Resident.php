@@ -328,7 +328,7 @@ class Resident {
     /**
      * @return mixed
      */
-    public function getisActive()
+    public function getIsActive()
     {
         return $this->isActive;
     }

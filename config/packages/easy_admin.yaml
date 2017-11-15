@@ -47,6 +47,7 @@ easy_admin:
                     - { property: 'email', label: 'Adresse eMail'}
                     - nom
                     - { property: 'prenom', label: 'Prénom'}
+                    - { property: 'image', type: 'image', base_path: '%app.path.user_images%' }
                     - adresse
                     - { property: 'isAdmin', label: 'Administrateur' }
                     - { property: 'isEducateur', label: 'Éducateur' }
@@ -57,6 +58,7 @@ easy_admin:
                 title: 'Liste du Personnel'
                 actions: ['show']
                 fields:
+                    - { property: 'image', type: 'image', base_path: '%app.path.user_images%' }
                     - { property: 'isEducateur', type: 'boolean', label: 'Éducateur' }
                     - { property: 'isSoignant', type: 'boolean', label: 'Soigant' }
                     - nom
@@ -74,6 +76,7 @@ easy_admin:
                     - nom
                     - { property: 'prenom', label: 'Prénom'}
                     - adresse
+                    - { property: 'imageFile', type: 'vich_image', label: 'Photo' }
                     - { type: 'divider' }
                     - { property: 'isAdmin', label: 'Administrateur' }
                     - { property: 'isEducateur', label: 'Éducateur' }

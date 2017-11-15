@@ -23,7 +23,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
  * @UniqueEntity("username", message="This username is already used.")
  * @Vich\Uploadable
  */
-class User implements UserInterface
+class User implements UserInterface, \Serializable
 {
     /**
      * @ORM\Id
@@ -76,15 +76,14 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", nullable=true)
+     * @var string
      */
     private $image;
 
     /**
      * This unmapped property stores the binary contents of the image file
      * associated with the user.
-     *
      * @Vich\UploadableField(mapping="user_images", fileNameProperty="image")
-     *
      * @var File
      */
     private $imageFile;
@@ -305,23 +304,7 @@ class User implements UserInterface
     }
 
     /**
-     * @return mixed
-     */
-    public function getPhoto()
-    {
-        return $this->photo;
-    }
-
-    /**
-     * @param mixed $photo
-     */
-    public function setPhoto($photo)
-    {
-        $this->photo = $photo;
-    }
-
-    /**
-     * @return mixed
+     * @return string
      */
     public function getImage()
     {
@@ -329,7 +312,7 @@ class User implements UserInterface
     }
 
     /**
-     * @param mixed $image
+     * @param string $image
      */
     public function setImage($image)
     {
@@ -345,17 +328,50 @@ class User implements UserInterface
     }
 
     /**
-     * @param File $imageFile
+     * @param File|null $image
+     * @internal param File $imageFile
      */
-    public function setImageFile($imageFile)
+    public function setImageFile(File $image = null)
     {
-        $this->imageFile = $imageFile;
+        $this->imageFile = $image;
+
+        // VERY IMPORTANT:
+        // It is required that at least one field changes if you are using Doctrine,
+        // otherwise the event listeners won't be called and the file is lost
+        if ($image) {
+            // if 'updatedAt' is not defined in your entity, use another property
+            $this->updatedAt = new \DateTime('now');
+        }
+    }
+
+    /** @see \Serializable::serialize() */
+    public function serialize()
+    {
+        return serialize(array(
+            $this->id,
+            $this->username,
+            $this->password,
+            // $this->salt,
+            // $this->getRoles(),
+        ));
+    }
+
+    /** @see \Serializable::unserialize() */
+    public function unserialize($serialized)
+    {
+        list (
+            $this->id,
+            $this->username,
+            $this->password,
+            // $this->salt,
+            // $this->getRoles()
+            ) = unserialize($serialized);
     }
 
     /**
      * @return mixed
      */
-    public function getisAdmin()
+    public function getIsAdmin()
     {
         return $this->isAdmin;
     }
@@ -371,7 +387,7 @@ class User implements UserInterface
     /**
      * @return mixed
      */
-    public function getisEducateur()
+    public function getIsEducateur()
     {
         return $this->isEducateur;
     }
@@ -387,7 +403,7 @@ class User implements UserInterface
     /**
      * @return mixed
      */
-    public function getisSoignant()
+    public function getIsSoignant()
     {
         return $this->isSoignant;
     }
@@ -403,7 +419,7 @@ class User implements UserInterface
     /**
      * @return mixed
      */
-    public function getisActive()
+    public function getIsActive()
     {
         return $this->isActive;
     }
