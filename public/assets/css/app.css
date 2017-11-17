@@ -1,3 +1,46 @@
 .timepicker .btn, .timepicker .btn:active {
-    padding:0;
+    padding: 0;
+}
+
+@media print {
+    .btn {
+        display: none !important
+    }
+
+    a:link:after, #content a:visited:after {
+        display: none;
+    }
+
+    .content-header {
+        display: block !important;
+    }
+
+    ul, ol, li {
+        margin: 0;
+    }
+
+    ul {
+        display: inline;
+        list-style: none;
+    }
+
+    li {
+        display: inline;
+    }
+
+    li:after {
+        content: " - ";
+    }
+
+    li:last-child:after {
+        content: "";
+    }
+
+    .form-group, .form-control, .control-label {
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+    .form-group {
+        padding-top:20px !important;
+    }
 }

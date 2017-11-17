@@ -15,14 +15,14 @@
                 {{ easyadmin_config('_internal.custom_css')|raw }}
             </style>
         {% endblock %}
-        <link rel="stylesheet" href="/assets/css/bootstrap-datetimepicker.min.css">
-        <link rel="stylesheet" href="/assets/css/bootstrap-datetimepicker-standalone.css">
-        <link rel="stylesheet" href="/assets/css/bootstrap-datetimepicker.css">
-        <link rel="stylesheet" href="/assets/css/app.css">
 
         {% for css_asset in easyadmin_config('design.assets.css') %}
             <link rel="stylesheet" href="{{ asset(css_asset) }}">
         {% endfor %}
+        <link rel="stylesheet" href="/assets/css/bootstrap-datetimepicker.min.css">
+        <link rel="stylesheet" href="/assets/css/bootstrap-datetimepicker-standalone.css">
+        <link rel="stylesheet" href="/assets/css/bootstrap-datetimepicker.css">
+        <link rel="stylesheet" href="/assets/css/app.css">
 
         {% block head_favicon %}
             {% set favicon = easyadmin_config('design.assets.favicon') %}
