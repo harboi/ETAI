@@ -7,6 +7,7 @@
  */
 
 namespace App\Controller;
+
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AdminController as BaseAdminController;
 use JavierEguiluz\Bundle\EasyAdminBundle\Event\EasyAdminEvents;
 use JavierEguiluz\Bundle\EasyAdminBundle\Exception\ForbiddenActionException;
@@ -16,6 +17,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 /**
  * @Route("/admin")
@@ -28,6 +30,61 @@ class AdminController extends BaseAdminController
     public function accueilAction()
     {
         return $this->render('accueil.html.twig');
+    }
+
+    public function prePersistEducativeEntity($entity)
+    {
+        if (method_exists($entity, 'setType')) {
+            // transmission educative = 0
+            $entity->setType(false);
+        }
+    }
+
+    public function prePersistSoinEntity($entity)
+    {
+        if (method_exists($entity, 'setType')) {
+            // transmission soin = 0
+            $entity->setType(true);
+        }
+    }
+
+    public function prePersistPersonnelEntity($entity)
+    {
+        if (method_exists($entity, 'setPassword') &&
+            method_exists($entity, 'getPassword')) {
+            $password = $entity->getPassword();
+            $encoder = $this->get('security.password_encoder');
+            $encodedPassword = $encoder->encodePassword($entity, $password);
+            $entity->setPassword($encodedPassword);
+        }
+    }
+
+    public function preUpdatePersonnelEntity($entity)
+    {
+        if (method_exists($entity, 'setPassword') &&
+            method_exists($entity, 'getPassword')) {
+            $isAdmin = $this->get('security.authorization_checker')->isGranted('ROLE_ADMIN');
+            if (!$isAdmin || empty($entity->getPassword())) {
+                $id = $this->request->query->get('id');
+                $newEm = $this->get('doctrine.orm.entity_manager');
+                // not working, doctrine replaces $entity values by $user values...
+                // duplicate password field and copy from duplicated into original password field...
+                $newEm->clear();
+                $user = $newEm->getRepository('AppBundle:User')->findById($id);
+                $entity->setPassword($user->getPassword());
+            } else {
+                $encoder = $this->get('security.password_encoder');
+                $encodedPassword = $encoder->encodePassword($entity, $entity->getPassword());
+                $entity->setPassword($encodedPassword);
+            }
+
+
+        }
+    }
+
+    public function preUpdateResidents_actuelsEntity($entity)
+    {
+
     }
 
     /**
@@ -54,7 +111,7 @@ class AdminController extends BaseAdminController
             throw new ForbiddenActionException(array('action' => $action, 'entity_name' => $this->entity['name']));
         }
 
-        return $this->executeDynamicMethod($action.'<EntityName>Action');
+        return $this->executeDynamicMethod($action . '<EntityName>Action');
     }
 
     /**
