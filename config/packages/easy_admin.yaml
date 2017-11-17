@@ -12,6 +12,7 @@ easy_admin:
         assets:
             css:
             js:
+        form_theme: 'vertical'
         templates:
             layout: '/backend/layout.html.twig'
             menu: '/backend/menu.html.twig'
@@ -47,7 +48,7 @@ easy_admin:
                     - { property: 'email', label: 'Adresse eMail'}
                     - nom
                     - { property: 'prenom', label: 'Prénom'}
-                    - { property: 'image', type: 'image', base_path: '%app.path.user_images%' }
+                    - { property: 'image', type: 'image', base_path: '%app.path.user_images%', label: 'Photo' }
                     - adresse
                     - { property: 'isAdmin', label: 'Administrateur' }
                     - { property: 'isEducateur', label: 'Éducateur' }
@@ -58,17 +59,18 @@ easy_admin:
                 title: 'Liste du Personnel'
                 actions: ['show']
                 fields:
-                    - { property: 'image', type: 'image', base_path: '%app.path.user_images%' }
+                    - { property: 'image', type: 'image', base_path: '%app.path.user_images%', label: 'Photo' }
                     - { property: 'isEducateur', type: 'boolean', label: 'Éducateur' }
                     - { property: 'isSoignant', type: 'boolean', label: 'Soigant' }
                     - nom
                     - { property: 'prenom', label: 'Prénom'}
                     - { property: 'username', label: 'Pseudo' }
-                    - { property: 'email', label: 'Adresse eMail', type: 'email' }
+                    - { property: 'email', type: 'email', label: 'Adresse eMail' }
             form:
                 fields:
                     - { property: 'username', label: 'Pseudo'}
-                    #- { property: 'password', type: 'password', label: 'Mot de Passe' }
+                    - { property: 'password', type: 'password', label: 'Mot de Passe' }
+                    #- { property: 'password', type: 'password', label: 'Mot de Passe', type_options: { mapped: false } }
                     #- { type: 'divider' }
                     #- { property: 'updated_at', label: 'créé le', type: 'datetime', type_options: { widget: 'choice' } }
                     #- { property: 'password', type: 'repeated', type_options: { first_options: { label: 'Mot de P' }, second_options: { label: 'Confirmer Mot de P' }, required: false } }
@@ -94,11 +96,11 @@ easy_admin:
                 fields:
                       - nom
                       - { property: 'prenom', label: 'Prénom'}
+                      - { property: 'image', type: 'image', base_path: '%app.path.resident_images%', label: 'Photo' }
                       - adresse
                       - { property: 'email', label: 'Adresse eMail'}
                       - description
                       - { property: 'ficheAlimentaire', label: 'Fiche Alimentaire'}
-                      - { property: 'image', type: 'image', base_path: '%app.path.resident_images%' }
                       - { property: 'maisonnee', label: 'Maisonnée' }
                       - { property: 'isActive', label: 'Résident actuel' }
             list:
@@ -108,7 +110,7 @@ easy_admin:
                     - { name: 'show' }
                     - { name: 'new', label: 'Créer Résident' }
                 fields:
-                    - { property: 'image', type: 'image', base_path: '%app.path.resident_images%' }
+                    - { property: 'image', type: 'image', base_path: '%app.path.resident_images%', label: 'Photo' }
                     - prenom
                     - nom
                     - { property: 'maisonnee', label: 'Maisonnée' }
@@ -135,11 +137,11 @@ easy_admin:
                 fields:
                       - nom
                       - { property: 'prenom', label: 'Prénom'}
+                      - { property: 'image', type: 'image', base_path: '%app.path.resident_images%', label: 'Photo' }
                       - adresse
                       - { property: 'email', label: 'Adresse eMail'}
                       - description
                       - { property: 'ficheAlimentaire', label: 'Fiche Alimentaire'}
-                      - { property: 'image', type: 'image', base_path: '%app.path.resident_images%' }
                       - { property: 'maisonnee', label: 'Maisonnée' }
                       - { property: 'isActive', label: 'Réside actuellement' }
             list:
@@ -147,7 +149,7 @@ easy_admin:
                 dql_filter: 'entity.isActive = 0'
                 actions: ['show', '-new']
                 fields:
-                    - { property: 'image', type: 'image', base_path: '%app.path.resident_images%' }
+                    - { property: 'image', type: 'image', base_path: '%app.path.resident_images%', label: 'Photo' }
                     - prenom
                     - nom
                     - { property: 'maisonnee', label: 'Maisonnée' }
@@ -185,13 +187,14 @@ easy_admin:
                 fields:
                     - { property: 'createdAt', label: 'Date' }
                     - { property: 'name', label: 'Descriptif court' }
-                    - { property: 'description', label: 'Contenu éducatif' }
-                    - { property: 'alerteSoin', label: 'Alerte soin' }
+                    - { property: 'resident', label: 'Résident' }
+                    - { property: 'user', label: 'Personnel' }
+                    - { property: 'maisonnee', label: 'Maisonnée' }
             form:
                 title: 'Formulaire Transmission éducative'
                 fields:
                     - { property: 'createdAt', label: 'Date', css_class: 'date', type_options: { widget: 'single_text', 'format': 'dd/MM/yyyy H:mm', 'attr': { 'class': 'dateTimePicker' } } }
-                    - { property: 'type', label: 'Type', type: 'choice', type_options: { choices: {'Soin':1, 'Educative':0 } } }
+                    #- { property: 'type', label: 'Type', type: 'choice', type_options: { choices: {'Soin':1, 'Educative':0 } } }
                     - { property: 'name', label: 'Descriptif court' }
                     - { property: 'description', label: 'Contenu Educatif' }
                     - { property: 'alerteSoin', label: 'Alerte Soin' }
@@ -206,7 +209,6 @@ easy_admin:
                 fields:
                     - { property: 'createdAt', label: 'Date' }
                     - { property: 'name', label: 'Descriptif court' }
-                    - { property: 'description', label: 'Contenu Soin' }
                     - { property: 'user', label: 'Personnel' }
                     - { property: 'resident', label: 'Résident' }
                     - { property: 'maisonnee', label: 'Maisonnée' }
@@ -220,11 +222,12 @@ easy_admin:
                     - { property: 'createdAt', label: 'Date' }
                     - { property: 'name', label: 'Descriptif court' }
                     - { property: 'description', label: 'Contenu soin' }
+                    - { property: 'maisonnee', label: 'Maisonnée' }
             form:
                 title: 'Formulaire Transmission de soin'
                 fields:
                     - { property: 'createdAt', label: 'Date', css_class: 'date', type_options: { widget: 'single_text' } }
-                    - { property: 'type', label: 'Type', type: 'choice', type_options: { choices: {'Soin':1, 'Educative':0 } } }
+                    #- { property: 'type', label: 'Type', type: 'choice', type_options: { choices: {'Soin':1, 'Educative':0 } } }
                     - { property: 'name', label: 'Descriptif court' }
                     - { property: 'description', label: 'Contenu Soin' }
                     - { property: 'user', label: 'Personnel' }
