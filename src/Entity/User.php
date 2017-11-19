@@ -55,6 +55,11 @@ class User implements UserInterface, \Serializable
     private $password;
 
     /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $oldPassword;
+
+    /**
      * @ORM\Column(type="string", nullable=true, unique=true)
      */
     private $email;
@@ -237,6 +242,22 @@ class User implements UserInterface, \Serializable
     public function setPassword($password)
     {
         $this->password = $password;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOldPassword()
+    {
+        return $this->oldPassword;
+    }
+
+    /**
+     * @param mixed $oldPassword
+     */
+    public function setOldPassword($oldPassword)
+    {
+        $this->oldPassword = $oldPassword;
     }
 
     /**

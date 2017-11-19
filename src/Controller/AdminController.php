@@ -56,6 +56,7 @@ class AdminController extends BaseAdminController
             $encoder = $this->get('security.password_encoder');
             $encodedPassword = $encoder->encodePassword($entity, $password);
             $entity->setPassword($encodedPassword);
+            $entity->setOldPassword($encodedPassword);
         }
     }
 
@@ -65,17 +66,12 @@ class AdminController extends BaseAdminController
             method_exists($entity, 'getPassword')) {
             $isAdmin = $this->get('security.authorization_checker')->isGranted('ROLE_ADMIN');
             if (!$isAdmin || empty($entity->getPassword())) {
-                $id = $this->request->query->get('id');
-                $newEm = $this->get('doctrine.orm.entity_manager');
-                // not working, doctrine replaces $entity values by $user values...
-                // duplicate password field and copy from duplicated into original password field...
-                $newEm->clear();
-                $user = $newEm->getRepository('AppBundle:User')->findById($id);
-                $entity->setPassword($user->getPassword());
+                $entity->setPassword($entity->getOldPassword());
             } else {
                 $encoder = $this->get('security.password_encoder');
                 $encodedPassword = $encoder->encodePassword($entity, $entity->getPassword());
                 $entity->setPassword($encodedPassword);
+                $entity->setOldPassword($encodedPassword);
             }
 
 
