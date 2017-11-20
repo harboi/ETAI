@@ -94,15 +94,13 @@ easy_admin:
             show:
                 title: 'Fiche Résident'
                 fields:
-                      - nom
-                      - { property: 'prenom', label: 'Prénom'}
-                      - { property: 'image', type: 'image', base_path: '%app.path.resident_images%', label: 'Photo' }
-                      - adresse
-                      - { property: 'email', label: 'Adresse eMail'}
-                      - description
-                      - { property: 'ficheAlimentaire', label: 'Fiche Alimentaire'}
-                      - { property: 'maisonnee', label: 'Maisonnée' }
-                      - { property: 'isActive', label: 'Résident actuel' }
+                    - nom
+                    - { property: 'prenom', label: 'Prénom'}
+                    - { property: 'image', type: 'image', base_path: '%app.path.resident_images%', label: 'Photo' }
+                    - { property: 'ficheAlimentaire', label: 'Fiche Alimentaire'}
+                    - { property: 'description', label: 'Autre'}
+                    - { property: 'maisonnee', label: 'Maisonnée' }
+                    - { property: 'isActive', label: 'Résident actuel' }
             list:
                 title: 'Liste des résidents'
                 dql_filter: 'entity.isActive = 1'
@@ -111,8 +109,10 @@ easy_admin:
                     - { name: 'new', label: 'Créer Résident' }
                 fields:
                     - { property: 'image', type: 'image', base_path: '%app.path.resident_images%', label: 'Photo' }
-                    - prenom
                     - nom
+                    - { property: 'prenom', label: 'Prénom'}
+                    - { property: 'ficheAlimentaire', label: 'Fiche Alimentaire'}
+                    - { property: 'description', label: 'Autre'}
                     - { property: 'maisonnee', label: 'Maisonnée' }
             form:
                 title: 'Formulaire Résident'
@@ -120,10 +120,8 @@ easy_admin:
                     #- { property: 'createdAt', type: 'birthday', label: 'Résident depuis le' }
                     - nom
                     - { property: 'prenom', label: 'Prénom'}
-                    - adresse
-                    - { property: 'email', label: 'Adresse eMail'}
-                    - description
                     - { property: 'ficheAlimentaire', label: 'Fiche Alimentaire'}
+                    - { property: 'description', label: 'Autre'}
                     - { property: 'imageFile', type: 'vich_image', label: 'Photo' }
                     - { property: 'maisonnee', label: 'Maisonnée' }
                     - { property: 'isActive', type: 'checkbox', label: 'Résident actuel' }
@@ -135,23 +133,23 @@ easy_admin:
             show:
                 title: 'Fiche Résident passé'
                 fields:
-                      - nom
-                      - { property: 'prenom', label: 'Prénom'}
-                      - { property: 'image', type: 'image', base_path: '%app.path.resident_images%', label: 'Photo' }
-                      - adresse
-                      - { property: 'email', label: 'Adresse eMail'}
-                      - description
-                      - { property: 'ficheAlimentaire', label: 'Fiche Alimentaire'}
-                      - { property: 'maisonnee', label: 'Maisonnée' }
-                      - { property: 'isActive', label: 'Réside actuellement' }
+                    - nom
+                    - { property: 'prenom', label: 'Prénom'}
+                    - { property: 'image', type: 'image', base_path: '%app.path.resident_images%', label: 'Photo' }
+                    - { property: 'ficheAlimentaire', label: 'Fiche Alimentaire'}
+                    - { property: 'description', label: 'Autre'}
+                    - { property: 'maisonnee', label: 'Maisonnée' }
+                    - { property: 'isActive', label: 'Réside actuellement' }
             list:
                 title: 'Liste des résidents passés'
                 dql_filter: 'entity.isActive = 0'
                 actions: ['show', '-new']
                 fields:
                     - { property: 'image', type: 'image', base_path: '%app.path.resident_images%', label: 'Photo' }
-                    - prenom
                     - nom
+                    - { property: 'prenom', label: 'Prénom'}
+                    - { property: 'ficheAlimentaire', label: 'Fiche Alimentaire'}
+                    - { property: 'description', label: 'Autre'}
                     - { property: 'maisonnee', label: 'Maisonnée' }
             form:
                 title: 'Formulaire Résident'
@@ -159,10 +157,8 @@ easy_admin:
                     #- { property: 'createdAt', type: 'birthday', label: 'Résident depuis le' }
                     - nom
                     - { property: 'prenom', label: 'Prénom'}
-                    - adresse
-                    - { property: 'email', label: 'Adresse eMail'}
-                    - description
                     - { property: 'ficheAlimentaire', label: 'Fiche Alimentaire'}
+                    - { property: 'description', label: 'Autre'}
                     - { property: 'imageFile', type: 'vich_image', label: 'Photo' }
                     - { property: 'maisonnee', label: 'Maisonnée' }
                     - { property: 'isActive', type: 'checkbox', label: 'Résident actuel' }
@@ -171,36 +167,38 @@ easy_admin:
             show:
                 title: 'Fiche de Transmission éducative'
                 fields:
-                      - { property: 'createdAt', label: 'Date' }
-                      - { property: 'name', label: 'Descriptif court' }
-                      - { property: 'description', label: 'Contenu Educatif' }
-                      - { property: 'alerteSoin', label: 'Alerte Soin' }
-                      - { property: 'user', label: 'Personnel' }
-                      - { property: 'resident', label: 'Résident' }
-                      - { property: 'maisonnee', label: 'Maisonnée' }
+                    - { property: 'createdAt', label: 'Date' }
+                    #- { property: 'name', label: 'Descriptif court' }
+                    - { property: 'resident', label: 'Résident' }
+                    - { property: 'user', label: 'Personnel' }
+                    - { property: 'maisonnee', label: 'Maisonnée' }
+                    - { property: 'description', label: 'Contenu Educatif' }
+                    - { property: 'alerteSoin', label: 'Alerte Soin' }
             list:
                 title: 'Liste des Transmissions éducatives'
                 dql_filter: 'entity.type = 0'
                 actions:
-                      - { name: 'show' }
-                      - { name: 'new', label: 'Créer Transmission éducative' }
+                    - { name: 'show' }
+                    - { name: 'new', label: 'Créer Transmission éducative' }
                 fields:
                     - { property: 'createdAt', label: 'Date' }
-                    - { property: 'name', label: 'Descriptif court' }
+                    #- { property: 'name', label: 'Descriptif court' }
                     - { property: 'resident', label: 'Résident' }
                     - { property: 'user', label: 'Personnel' }
                     - { property: 'maisonnee', label: 'Maisonnée' }
+                    - { property: 'description', label: 'Contenu Educatif' }
+                    - { property: 'alerteSoin', label: 'Alerte Soin' }
             form:
                 title: 'Formulaire Transmission éducative'
                 fields:
                     - { property: 'createdAt', label: 'Date', css_class: 'date', type_options: { widget: 'single_text', 'format': 'dd/MM/yyyy H:mm', 'attr': { 'class': 'dateTimePicker' } } }
                     #- { property: 'type', label: 'Type', type: 'choice', type_options: { choices: {'Soin':1, 'Educative':0 } } }
-                    - { property: 'name', label: 'Descriptif court' }
+                    #- { property: 'name', label: 'Descriptif court' }
+                    - { property: 'resident', label: 'Résident' }
+                    - { property: 'user', label: 'Personnel' }
+                    - { property: 'maisonnee', label: 'Maisonnée' }
                     - { property: 'description', label: 'Contenu Educatif' }
                     - { property: 'alerteSoin', label: 'Alerte Soin' }
-                    - { property: 'user', label: 'Personnel' }
-                    - { property: 'resident', label: 'Résident' }
-                    - { property: 'maisonnee', label: 'Maisonnée' }
 
         Soin:
             class: App\Entity\Transmission
@@ -208,10 +206,11 @@ easy_admin:
                 title: 'Fiche de Transmission de soin'
                 fields:
                     - { property: 'createdAt', label: 'Date' }
-                    - { property: 'name', label: 'Descriptif court' }
-                    - { property: 'user', label: 'Personnel' }
+                    #- { property: 'name', label: 'Descriptif court' }
                     - { property: 'resident', label: 'Résident' }
+                    - { property: 'user', label: 'Personnel' }
                     - { property: 'maisonnee', label: 'Maisonnée' }
+                    - { property: 'description', label: 'Contenu Soin' }
             list:
                 title: 'Liste des Transmissions de soins'
                 dql_filter: 'entity.type = 1'
@@ -220,18 +219,20 @@ easy_admin:
                     - { name: 'new', label: 'Créer Transmission de soin' }
                 fields:
                     - { property: 'createdAt', label: 'Date' }
-                    - { property: 'name', label: 'Descriptif court' }
-                    - { property: 'description', label: 'Contenu soin' }
+                    #- { property: 'name', label: 'Descriptif court' }
+                    - { property: 'resident', label: 'Résident' }
+                    - { property: 'user', label: 'Personnel' }
                     - { property: 'maisonnee', label: 'Maisonnée' }
+                    - { property: 'description', label: 'Contenu soin' }
             form:
                 title: 'Formulaire Transmission de soin'
                 fields:
-                    - { property: 'createdAt', label: 'Date', css_class: 'date', type_options: { widget: 'single_text' } }
+                    - { property: 'createdAt', label: 'Date', css_class: 'date', type_options: { widget: 'single_text', 'format': 'dd/MM/yyyy H:mm', 'attr': { 'class': 'dateTimePicker' } } }
                     #- { property: 'type', label: 'Type', type: 'choice', type_options: { choices: {'Soin':1, 'Educative':0 } } }
-                    - { property: 'name', label: 'Descriptif court' }
+                    #- { property: 'name', label: 'Descriptif court' }
                     - { property: 'description', label: 'Contenu Soin' }
-                    - { property: 'user', label: 'Personnel' }
                     - { property: 'resident', label: 'Résident' }
+                    - { property: 'user', label: 'Personnel' }
                     - { property: 'maisonnee', label: 'Maisonnée' }
 
         Maisonnee:
@@ -248,13 +249,13 @@ easy_admin:
             list:
                 title: 'Liste des Maisonnées'
                 actions:
-                      - { name: 'show' }
-                      - { name: 'new', label: 'Créer une Maisonnée' }
+                    - { name: 'show' }
+                    - { name: 'new', label: 'Créer une Maisonnée' }
                 fields:
-                      - { property: 'name', label: 'Nom' }
-                      - { property: 'users', label: 'Personnel' }
-                      - { property: 'residents', label: 'Résidents' }
-                      - { property: 'transmissions', label: 'Transmissions' }
+                    - { property: 'name', label: 'Nom' }
+                    - { property: 'users', label: 'Personnel' }
+                    - { property: 'residents', label: 'Résidents' }
+                    - { property: 'transmissions', label: 'Transmissions' }
             form:
                 title: 'Formulaire Maisonnée'
                 fields:

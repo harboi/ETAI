@@ -34,12 +34,12 @@ class Transmission {
     private $type;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", nullable=true)
      */
     private $name;
 
     /**
-     * @ORM\Column(type="text")
+     * @ORM\Column(type="text", nullable=true)
      */
     private $description;
 
@@ -73,7 +73,7 @@ class Transmission {
 
     public function __toString()
     {
-        return $this->name;
+        return substr($this->description, 0, 20)."...";
     }
 
     /**
