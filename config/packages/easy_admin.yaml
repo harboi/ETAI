@@ -44,8 +44,8 @@ easy_admin:
             show:
                 title: 'Fiche Personnel'
                 fields:
-                    - { property: 'username', label: 'Pseudo'}
-                    - { property: 'email', label: 'Adresse eMail'}
+                    - { property: 'username', label: "Nom d'utilisateur" }
+                    #- { property: 'email', label: 'Adresse eMail'}
                     - nom
                     - { property: 'prenom', label: 'Prénom'}
                     - { property: 'image', type: 'image', base_path: '%app.path.user_images%', label: 'Photo' }
@@ -59,22 +59,22 @@ easy_admin:
                 title: 'Liste du Personnel'
                 actions: ['show']
                 fields:
+                    - { property: 'username', label: "Nom d'utilisateur" }
+                    - nom
+                    - { property: 'prenom', label: 'Prénom'}
                     - { property: 'image', type: 'image', base_path: '%app.path.user_images%', label: 'Photo' }
                     - { property: 'isEducateur', type: 'boolean', label: 'Éducateur' }
                     - { property: 'isSoignant', type: 'boolean', label: 'Soigant' }
-                    - nom
-                    - { property: 'prenom', label: 'Prénom'}
-                    - { property: 'username', label: 'Pseudo' }
-                    - { property: 'email', type: 'email', label: 'Adresse eMail' }
+                    #- { property: 'email', type: 'email', label: 'Adresse eMail' }
             form:
                 fields:
-                    - { property: 'username', label: 'Pseudo'}
+                    - { property: 'username', label: "Nom d'utilisateur" }
                     - { property: 'password', type: 'password', label: 'Mot de Passe' }
                     #- { property: 'password', type: 'password', label: 'Mot de Passe', type_options: { mapped: false } }
                     #- { type: 'divider' }
                     #- { property: 'updated_at', label: 'créé le', type: 'datetime', type_options: { widget: 'choice' } }
                     #- { property: 'password', type: 'repeated', type_options: { first_options: { label: 'Mot de P' }, second_options: { label: 'Confirmer Mot de P' }, required: false } }
-                    - { property: 'email', label: 'Adresse eMail'}
+                    #- { property: 'email', label: 'Adresse eMail'}
                     - nom
                     - { property: 'prenom', label: 'Prénom'}
                     - adresse

@@ -1,7 +1,7 @@
 security:
     providers:
         user:
-            entity: { class: App\Entity\User, property: email }
+            entity: { class: App\Entity\User, property: username }
 
     encoders:
         Symfony\Component\Security\Core\User\User:
