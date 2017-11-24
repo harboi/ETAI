@@ -1,3 +1,4 @@
+{% set userRoles = app.user.roles|default([]) %}
 <!DOCTYPE html>
 <html lang="{{ app.request.locale|split('_')|first|default('en') }}">
     <head>

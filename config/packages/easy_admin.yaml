@@ -6,6 +6,14 @@
 #        - App\Entity\User
 easy_admin:
     site_name: 'ETAI'
+    list:
+        actions:
+            - { name: 'show', icon: 'search' }
+            - { name: 'edit', icon: 'pencil' }
+            - { name: 'new', icon: 'plus', label: 'Créer' }
+            - { name: 'delete', icon: 'close', label: false }
+    show:
+        actions: ['-edit', '-delete']
     design:
         color_scheme: 'dark' # dark | light
         brand_color: '#34495e'
@@ -16,6 +24,8 @@ easy_admin:
         templates:
             layout: '/backend/layout.html.twig'
             menu: '/backend/menu.html.twig'
+            list: '/backend/list.html.twig'
+            show: '/backend/show.html.twig'
         menu:
             - { label: 'Accueil', route: 'accueil', default: true }
             - label: 'Transmission'
@@ -27,9 +37,9 @@ easy_admin:
               icon: 'users'
               children:
                 - { label: 'Actuels', entity: 'Residents_actuels'}
-                - { label: 'Passés', entity: 'Residents_passes'}
+                - { label: 'Passés', entity: 'Residents_passes', required_role: ["ROLE_ADMIN"] }
             - { label: 'Personnel', entity: 'Personnel', icon: 'user' }
-            - { label: 'Maisonnées', entity: 'Maisonnee', icon: 'home' }
+            - { label: 'Maisonnées', entity: 'Maisonnee', icon: 'home', required_role: ["ROLE_ADMIN"] }
     formats:
         date:     'd/m/Y'
         time:     'H:i'
@@ -45,10 +55,10 @@ easy_admin:
                 title: 'Fiche Personnel'
                 fields:
                     - { property: 'username', label: "Nom d'utilisateur" }
+                    - { property: 'image', type: 'image', base_path: '%app.path.user_images%', label: 'Photo' }
                     #- { property: 'email', label: 'Adresse eMail'}
                     - nom
                     - { property: 'prenom', label: 'Prénom'}
-                    - { property: 'image', type: 'image', base_path: '%app.path.user_images%', label: 'Photo' }
                     - adresse
                     - { property: 'isAdmin', label: 'Administrateur' }
                     - { property: 'isEducateur', label: 'Éducateur' }
@@ -57,7 +67,6 @@ easy_admin:
                     - { property: 'isActive', label: 'Compte activé' }
             list:
                 title: 'Liste du Personnel'
-                actions: ['show']
                 fields:
                     - { property: 'username', label: "Nom d'utilisateur" }
                     - nom
@@ -104,9 +113,6 @@ easy_admin:
             list:
                 title: 'Liste des résidents'
                 dql_filter: 'entity.isActive = 1'
-                actions:
-                    - { name: 'show' }
-                    - { name: 'new', label: 'Créer Résident' }
                 fields:
                     - { property: 'image', type: 'image', base_path: '%app.path.resident_images%', label: 'Photo' }
                     - nom
@@ -130,6 +136,7 @@ easy_admin:
         Residents_passes:
             label: 'Résidents passés'
             class: App\Entity\Resident
+            disabled_actions: ['new']
             show:
                 title: 'Fiche Résident passé'
                 fields:
@@ -143,7 +150,6 @@ easy_admin:
             list:
                 title: 'Liste des résidents passés'
                 dql_filter: 'entity.isActive = 0'
-                actions: ['show', '-new']
                 fields:
                     - { property: 'image', type: 'image', base_path: '%app.path.resident_images%', label: 'Photo' }
                     - nom
@@ -177,9 +183,6 @@ easy_admin:
             list:
                 title: 'Liste des Transmissions éducatives'
                 dql_filter: 'entity.type = 0'
-                actions:
-                    - { name: 'show' }
-                    - { name: 'new', label: 'Créer Transmission éducative' }
                 fields:
                     - { property: 'createdAt', label: 'Date' }
                     #- { property: 'name', label: 'Descriptif court' }
@@ -214,9 +217,6 @@ easy_admin:
             list:
                 title: 'Liste des Transmissions de soins'
                 dql_filter: 'entity.type = 1'
-                actions:
-                    - { name: 'show' }
-                    - { name: 'new', label: 'Créer Transmission de soin' }
                 fields:
                     - { property: 'createdAt', label: 'Date' }
                     #- { property: 'name', label: 'Descriptif court' }
@@ -244,13 +244,10 @@ easy_admin:
                     - { property: 'description', label: 'Descriptif' }
                     - { property: 'users', label: 'Personnel' }
                     - { property: 'residents', label: 'Résidents' }
-                    - { property: 'transmissions', label: 'Transmissions' }
+                    #- { property: 'transmissions', label: 'Transmissions' }
 
             list:
                 title: 'Liste des Maisonnées'
-                actions:
-                    - { name: 'show' }
-                    - { name: 'new', label: 'Créer une Maisonnée' }
                 fields:
                     - { property: 'name', label: 'Nom' }
                     - { property: 'users', label: 'Personnel' }

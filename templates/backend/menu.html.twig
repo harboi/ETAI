@@ -4,11 +4,10 @@
     {% else %}
         {% set menu_params = { menuIndex: item.menu_index, submenuIndex: item.submenu_index } %}
         {% set path =
-            item.type == 'link' ? item.url :
-            item.type == 'route' ? path(item.route, item.params) :
-            item.type == 'entity' ? path('easyadmin', { entity: item.entity, action: 'list' }|merge(menu_params)|merge(item.params)) :
-            item.type == 'empty' ? '#' : ''
-        %}
+        item.type == 'link' ? item.url :
+        item.type == 'route' ? path(item.route, item.params) :
+        item.type == 'entity' ? path('easyadmin', { entity: item.entity, action: 'list' }|merge(menu_params)|merge(item.params)) :
+        item.type == 'empty' ? '#' : '' %}
 
         {# if the URL generated for the route belongs to the backend, regenerate
            the URL to include the menu_params to display the selected menu item
@@ -32,26 +31,36 @@
 
 <ul class="sidebar-menu">
     {% set _menu_items = easyadmin_config('design.menu') %}
+    {% set breakMenu = false %}
 
     {% block main_menu %}
-        {% for item in _menu_items %}
-            {% block menu_item %}
-                <li class="{{ item.type == 'divider' ? 'header' }} {{ item.children is not empty ? 'treeview' }} {{ app.request.query.get('menuIndex')|default(-1) == loop.index0 ? 'active' }} {{ app.request.query.get('submenuIndex')|default(-1) != -1 ? 'submenu-active' }}">
-                    {{ helper.render_menu_item(item, _entity_config.translation_domain|default('messages')) }}
+        {% for userRole in userRoles %}
+            {% if (userRole != 'ROLE_USER') and not breakMenu %}
+                {% for item in _menu_items %}
+                    {% set breakMenu = true %}
+                    {% if (userRole in item.required_role|default([])) or (item.required_role|default([]) is empty) %}
+                        {% block menu_item %}
+                            <li class="{{ item.type == 'divider' ? 'header' }} {{ item.children is not empty ? 'treeview' }} {{ app.request.query.get('menuIndex')|default(-1) == loop.index0 ? 'active' }} {{ app.request.query.get('submenuIndex')|default(-1) != -1 ? 'submenu-active' }}">
+                                {{ helper.render_menu_item(item, _entity_config.translation_domain|default('messages')) }}
 
-                    {% if item.children|default([]) is not empty %}
-                        <ul class="treeview-menu">
-                            {% for subitem in item.children %}
-                                {% block menu_subitem %}
-                                    <li class="{{ subitem.type == 'divider' ? 'header' }} {{ app.request.query.get('menuIndex')|default(-1) == loop.parent.loop.index0 and app.request.query.get('submenuIndex')|default(-1) == loop.index0 ? 'active' }}">
-                                        {{ helper.render_menu_item(subitem, _entity_config.translation_domain|default('messages')) }}
-                                    </li>
-                                {% endblock menu_subitem %}
-                            {% endfor %}
-                        </ul>
+                                {% if item.children|default([]) is not empty %}
+                                    <ul class="treeview-menu">
+                                        {% for subitem in item.children %}
+                                            {% if (userRole in subitem.required_role|default([])) or (subitem.required_role|default([]) is empty) %}
+                                                {% block menu_subitem %}
+                                                    <li class="{{ subitem.type == 'divider' ? 'header' }} {{ app.request.query.get('menuIndex')|default(-1) == loop.parent.loop.index0 and app.request.query.get('submenuIndex')|default(-1) == loop.index0 ? 'active' }}">
+                                                        {{ helper.render_menu_item(subitem, _entity_config.translation_domain|default('messages')) }}
+                                                    </li>
+                                                {% endblock menu_subitem %}
+                                            {% endif %}
+                                        {% endfor %}
+                                    </ul>
+                                {% endif %}
+                            </li>
+                        {% endblock menu_item %}
                     {% endif %}
-                </li>
-            {% endblock menu_item %}
+                {% endfor %}
+            {% endif %}
         {% endfor %}
     {% endblock main_menu %}
 </ul>
