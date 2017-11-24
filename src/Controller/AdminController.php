@@ -8,8 +8,10 @@
 
 namespace App\Controller;
 
+use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AdminController as BaseAdminController;
 use JavierEguiluz\Bundle\EasyAdminBundle\Event\EasyAdminEvents;
+use JavierEguiluz\Bundle\EasyAdminBundle\Exception\EntityRemoveException;
 use JavierEguiluz\Bundle\EasyAdminBundle\Exception\ForbiddenActionException;
 use JavierEguiluz\Bundle\EasyAdminBundle\Exception\NoEntitiesConfiguredException;
 use JavierEguiluz\Bundle\EasyAdminBundle\Exception\UndefinedEntityException;
@@ -78,9 +80,47 @@ class AdminController extends BaseAdminController
         }
     }
 
-    public function preUpdateResidents_actuelsEntity($entity)
-    {
 
+    /**
+     * The method that is executed when the user performs a 'delete' action to
+     * remove any entity.
+     *
+     * @return RedirectResponse
+     */
+    protected function deleteResidents_actuelsAction()
+    {
+        $this->dispatch(EasyAdminEvents::PRE_DELETE);
+
+        if ('DELETE' !== $this->request->getMethod()) {
+            return $this->redirect($this->generateUrl('easyadmin', array('action' => 'list', 'entity' => $this->entity['name'])));
+        }
+
+        $id = $this->request->query->get('id');
+        $form = $this->createDeleteForm($this->entity['name'], $id);
+        $form->handleRequest($this->request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $easyadmin = $this->request->attributes->get('easyadmin');
+            $entity = $easyadmin['item'];
+
+            $this->dispatch(EasyAdminEvents::PRE_REMOVE, array('entity' => $entity));
+
+            $this->executeDynamicMethod('preRemove<EntityName>Entity', array($entity));
+
+            try {
+                $entity->setIsActive(0);
+                $this->em->persist($entity);
+                $this->em->flush();
+            } catch (ForeignKeyConstraintViolationException $e) {
+                throw new EntityRemoveException(array('entity_name' => $this->entity['name'], 'message' => $e->getMessage()));
+            }
+
+            $this->dispatch(EasyAdminEvents::POST_REMOVE, array('entity' => $entity));
+        }
+
+        $this->dispatch(EasyAdminEvents::POST_DELETE);
+
+        return $this->redirectToReferrer();
     }
 
     /**
