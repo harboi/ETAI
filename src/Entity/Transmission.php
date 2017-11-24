@@ -55,6 +55,11 @@ class Transmission {
     private $user;
 
     /**
+     * @var integer
+     */
+    private $owner;
+
+    /**
      * @var Resident
      * @ORM\ManyToOne(targetEntity="Resident", inversedBy="transmissions")
      */
@@ -69,6 +74,7 @@ class Transmission {
     public function __construct()
     {
         $this->createdAt = new \DateTime('NOW');
+        $this->owner = $this->user;
     }
 
     public function __toString()
@@ -186,6 +192,22 @@ class Transmission {
     public function setUser($user)
     {
         $this->user = $user;
+    }
+
+    /**
+     * @return int
+     */
+    public function getOwner()
+    {
+        return $this->getUser()->getId();
+    }
+
+    /**
+     * @param int $owner
+     */
+    public function setOwner($owner)
+    {
+        $this->owner = $owner;
     }
 
     /**
