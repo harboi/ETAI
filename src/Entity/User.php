@@ -157,6 +157,10 @@ class User implements UserInterface, \Serializable
      */
     public function getRoles()
     {
+        if (!$this->isActive) {
+            return array();
+        }
+
         if ($this->isAdmin) {
             return array('ROLE_ADMIN', 'ROLE_USER');
         }
