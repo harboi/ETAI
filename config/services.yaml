@@ -4,6 +4,7 @@ parameters:
     locale: 'fr'
     app.path.user_images: images/user
     app.path.resident_images: images/resident
+    secret: qeotbvnzgzkrucvbwlfjhti
 
 vich_uploader:
     db_driver: orm
