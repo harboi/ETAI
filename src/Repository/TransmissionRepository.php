@@ -7,6 +7,7 @@
  */
 
 namespace App\Repository;
+
 use Doctrine\ORM\EntityRepository;
 use App\Entity\Transmission;
 
@@ -37,5 +38,54 @@ class TransmissionRepository extends EntityRepository
             throw new \Exception;
         }
         return $transmissions;
+    }
+
+    /**
+     * @return Transmission|array
+     * @throws \Exception
+     */
+    public function getListFromParameters($start, $end, $resident, $personnel, $maisonnee)
+    {
+        $start = new \DateTime($start);
+        $end = new \DateTime($end);
+        $Transmissions = $this->createQueryBuilder('t')
+            ->addSelect('t')
+            ->where('t.createdAt BETWEEN :start AND :end')
+            ->setParameter('start', $start)
+            ->setParameter('end', $end);
+
+        if (!empty($resident)) {
+            $Transmissions = $Transmissions->andWhere("t.resident = :resident")
+                ->setParameter('resident', $resident);
+        }
+
+        if (!empty($personnel)) {
+            $Transmissions = $Transmissions->andWhere("t.user = :personnel")
+                ->setParameter('personnel', $personnel);
+        }
+
+        if (!empty($maisonnee)) {
+            $Transmissions = $Transmissions->andWhere("t.maisonnee = :maisonnee")
+                ->setParameter('maisonnee', $maisonnee);
+        }
+
+        $Transmissions = $Transmissions->getQuery()->getResult();
+        /**
+         * $Commerces = $this->createQueryBuilder('c')
+         * ->addSelect('t')
+         * ->join('c.tags', 't')
+         * ->where('c.departement = :departement')
+         * ->andWhere("t.id IN(:tag)")
+         * ->setParameter('departement', $departement)
+         * ->setParameter('tag', $tag)
+         * ->orderBy('c.id', 'DESC')
+         * ->setMaxResults('100')
+         * ->getQuery()
+         * ->getResult();
+         */
+        if (empty(array_filter($Transmissions))) {
+            throw new \Exception;
+        }
+        return $Transmissions;
     }
 }

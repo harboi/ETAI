@@ -16,6 +16,8 @@
                 {{ easyadmin_config('_internal.custom_css')|raw }}
             </style>
         {% endblock %}
+        {% block stylesheets %}
+        {% endblock %}
 
         {% for css_asset in easyadmin_config('design.assets.css') %}
             <link rel="stylesheet" href="{{ asset(css_asset) }}">
@@ -30,6 +32,8 @@
             <link rel="icon" type="{{ favicon.mime_type }}" href="{{ asset(favicon.path) }}" />
         {% endblock %}
 
+        {% block top_javascript %}
+        {% endblock %}
         {% block head_javascript %}
             {% block adminlte_options %}
                 <script type="text/javascript">

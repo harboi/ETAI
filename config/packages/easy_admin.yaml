@@ -28,6 +28,7 @@ easy_admin:
             show: '/backend/show.html.twig'
         menu:
             - { label: 'Accueil', route: 'accueil', default: true }
+            - { label: 'Calendrier', route: 'calendar', icon: 'calendar' }
             - label: 'Transmission'
               icon: 'file'
               children:

@@ -1,0 +1,141 @@
+{% extends "/backend/layout.html.twig" %}
+
+
+
+{% block main %}
+    <div class="container">
+        <div class="row" id="selectOptionsContainer">
+            <div class="col-xs-12 col-sm-4">
+                <div class="form-group field-entity">
+                    <label class="control-label" for="resident">Résident</label>
+                    <select id="resident" name="resident" data-widget="select2"
+                            class="form-control select2-hidden-accessible" tabindex="-1" aria-hidden="true">
+                        <option value="">Aucun(e)</option>
+                        {% for resident in residentList %}
+                            <option value="{{ resident.id }}">{{ resident }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+            <div class="col-xs-12 col-sm-4">
+                <div class="form-group field-entity">
+                    <label class="control-label" for="personnel">Personnel</label>
+                    <select id="personnel" name="resident" data-widget="select2"
+                            class="form-control select2-hidden-accessible" tabindex="-1" aria-hidden="true">
+                        <option value="">Aucun(e)</option>
+                        {% for user in userList %}
+                            <option value="{{ user.id }}">{{ user }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+            <div class="col-xs-12 col-sm-4">
+                <div class="form-group field-entity">
+                    <label class="control-label" for="maisonnee">Maisonnée</label>
+                    <select id="maisonnee" name="maisonnee" data-widget="select2"
+                            class="form-control select2-hidden-accessible" tabindex="-1" aria-hidden="true">
+                        <option value="">Aucun(e)</option>
+                        {% for maisonnee in maisonneeList %}
+                            <option value="{{ maisonnee.id }}">{{ maisonnee }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div id='calendar'></div>
+    </div>
+{% endblock %}
+
+
+{% block stylesheets %}
+    <link href='/assets/calendar/fullcalendar.min.css' rel='stylesheet'/>
+    <link href='/assets/calendar/fullcalendar.print.min.css' rel='stylesheet' media='print'/>
+    <style>
+        #calendar {
+            max-width: 100%;
+            margin: 0 auto;
+        }
+
+        .container {
+            width: 90%;
+            margin: 0 auto;
+        }
+
+        .fc-content {
+            font-size: 1.5em;
+        }
+    </style>
+{% endblock %}
+{% block body_javascript %}
+    <script src='/assets/calendar/lib/moment.min.js'></script>
+    <script src='/assets/calendar/fullcalendar.min.js'></script>
+    <script src='/assets/calendar/locale-all.js'></script>
+    <script>
+        var maisonnee = '',
+            resident = '',
+            personnel = '';
+
+        $(document).ready(function () {
+
+            $(function () {
+                // Select2 widget is only enabled for the <select> elements which
+                // explicitly ask for it
+                $('#selectOptionsContainer').find('select[data-widget="select2"]').select2({
+                    theme: 'bootstrap',
+                    language: 'fr'
+                });
+            });
+
+
+            $('#calendar').fullCalendar({
+                navLinks: true,
+                header: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'month,agendaWeek,agendaDay'
+                },
+                aspectRatio:2,
+                allDaySlot: false,
+
+                navLinkDayClick: function (date, jsEvent) {
+                    console.log('day', date.format()); // date is a moment
+                    console.log('coords', jsEvent.pageX, jsEvent.pageY);
+                },
+                locale: 'fr',
+                editable: false,
+                eventLimit: true, // allow "more" link when too many events
+
+                //events: 'calendar.json'
+                events: {
+                    url: 'calendar.json',
+                    type: 'GET',
+                    data: function () {
+                        return {
+                            maisonnee: $('#maisonnee').find(":selected").attr('value'),
+                            resident: $('#resident').find(":selected").attr('value'),
+                            personnel: $('#personnel').find(":selected").attr('value')
+                        }
+                    },
+                    error: function () {
+                        alert('there was an error while fetching events!');
+                    },
+                    cache: true
+                },
+                loading: function( isLoading, view ) {
+                    if(isLoading) {
+                        //display spinner's div
+                    } else {
+                        //and hide
+                    }
+                }
+            });
+
+            $('.form-control').change(function () {
+                $('#calendar').fullCalendar('refetchEvents');
+            });
+
+        });
+    </script>
+{% endblock %}

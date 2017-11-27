@@ -8,6 +8,11 @@
 
 namespace App\Controller;
 
+use App\Entity\Transmission;
+use App\Repository\MaisonneeRepository;
+use App\Repository\ResidentRepository;
+use App\Repository\TransmissionRepository;
+use App\Repository\UserRepository;
 use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AdminController as BaseAdminController;
 use JavierEguiluz\Bundle\EasyAdminBundle\Event\EasyAdminEvents;
@@ -15,6 +20,7 @@ use JavierEguiluz\Bundle\EasyAdminBundle\Exception\EntityRemoveException;
 use JavierEguiluz\Bundle\EasyAdminBundle\Exception\ForbiddenActionException;
 use JavierEguiluz\Bundle\EasyAdminBundle\Exception\NoEntitiesConfiguredException;
 use JavierEguiluz\Bundle\EasyAdminBundle\Exception\UndefinedEntityException;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -32,6 +38,82 @@ class AdminController extends BaseAdminController
     public function accueilAction()
     {
         return $this->render('accueil.html.twig');
+    }
+
+    /**
+     * @Route("/calendrier", name="calendar")
+     */
+    public function calendrierAction()
+    {
+        try {
+            /** @var  ResidentRepository $residentRepo */
+            $residentRepo = $this->getDoctrine()->getManager()->getRepository('\App\Entity\Resident');
+            $residentList = $residentRepo->getList();
+        } catch (\Exception $e) {
+            $residentList = null;
+        }
+
+        try {
+            /** @var  UserRepository $userRepo */
+            $userRepo = $this->getDoctrine()->getManager()->getRepository('\App\Entity\User');
+            $userList = $userRepo->getList();
+
+        } catch (\Exception $e) {
+            $userList = null;
+        }
+
+        try {
+            /** @var  MaisonneeRepository $maisonneeRepo */
+            $maisonneeRepo = $this->getDoctrine()->getManager()->getRepository('\App\Entity\Maisonnee');
+            $maisonneeList = $maisonneeRepo->getList();
+        } catch (\Exception $e) {
+            $maisonneeList = null;
+        }
+
+        return $this->render('calendar.html.twig', ['maisonneeList' => $maisonneeList, 'userList' => $userList, 'residentList' => $residentList ]);
+    }
+
+    /**
+     * @Route("/calendar.json", name="CalendarJson")
+     * @param Request $request
+     * @return JsonResponse|RedirectResponse
+     */
+    public function jsonAction(Request $request)
+    {
+        $startDate = $request->query->get('start');
+        $endDate = $request->query->get('end');
+        $maisonneeId = $request->query->get('maisonnee');
+        $residentId = $request->query->get('resident');
+        $personnelId = $request->query->get('personnel');
+
+        try {
+            /** @var  TransmissionRepository $repo */
+            $repo = $this->getDoctrine()->getManager()->getRepository('\App\Entity\Transmission');
+            $transmissionList = (array)$repo->getListFromParameters($startDate, $endDate, $residentId, $personnelId, $maisonneeId);
+        } catch (\Exception $e) {
+            //return $this->redirect($this->generateUrl('easyadmin'));
+            return new JsonResponse([]);
+        }
+
+        //map array of transmission to prepare a JSON for Calendar events
+        $listForCalendar = array();
+        /** @var  Transmission $transmission */
+        foreach ($transmissionList as $transmission) {
+            $type = $transmission->getType() ? 'Educative':'Soin';
+            $url = "./?action=show&entity=$type&id=".$transmission->getId();
+            $mappedTransmission = [
+                'start' => $transmission->getCreatedAt()->format('Y-m-d H:i:s'),
+                'title' => $transmission->getResident()->__toString(),
+                'url' => $url,
+                'color' => ($type == 'Educative') ? '#16a085':'#d35400'
+            ];
+            if($type == 'Educative' && !empty($transmission->getAlerteSoin())) {
+                $mappedTransmission['borderColor'] = 'red';
+            }
+            array_push($listForCalendar, $mappedTransmission);
+        }
+
+        return new JsonResponse($listForCalendar);
     }
 
     public function prePersistEducativeEntity($entity)
