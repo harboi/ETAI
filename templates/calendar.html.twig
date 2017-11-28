@@ -10,7 +10,7 @@
                     <label class="control-label" for="resident">Résident</label>
                     <select id="resident" name="resident" data-widget="select2"
                             class="form-control select2-hidden-accessible" tabindex="-1" aria-hidden="true">
-                        <option value="">Aucun(e)</option>
+                        <option value="">- Tous les Résidents -</option>
                         {% for resident in residentList %}
                             <option value="{{ resident.id }}">{{ resident }}</option>
                         {% endfor %}
@@ -23,7 +23,7 @@
                     <label class="control-label" for="personnel">Personnel</label>
                     <select id="personnel" name="resident" data-widget="select2"
                             class="form-control select2-hidden-accessible" tabindex="-1" aria-hidden="true">
-                        <option value="">Aucun(e)</option>
+                        <option value="">- Tout le Personnel -</option>
                         {% for user in userList %}
                             <option value="{{ user.id }}">{{ user }}</option>
                         {% endfor %}
@@ -36,7 +36,7 @@
                     <label class="control-label" for="maisonnee">Maisonnée</label>
                     <select id="maisonnee" name="maisonnee" data-widget="select2"
                             class="form-control select2-hidden-accessible" tabindex="-1" aria-hidden="true">
-                        <option value="">Aucun(e)</option>
+                        <option value="">- Toutes les Maisonnées -</option>
                         {% for maisonnee in maisonneeList %}
                             <option value="{{ maisonnee.id }}">{{ maisonnee }}</option>
                         {% endfor %}
@@ -46,6 +46,7 @@
         </div>
         <div id='calendar'></div>
     </div>
+    <div class="loading hidden">Chargement&#8230;</div>
 {% endblock %}
 
 
@@ -96,7 +97,7 @@
                     center: 'title',
                     right: 'month,agendaWeek,agendaDay'
                 },
-                aspectRatio:2,
+                aspectRatio:1.5,
                 allDaySlot: false,
 
                 navLinkDayClick: function (date, jsEvent) {
@@ -125,9 +126,9 @@
                 },
                 loading: function( isLoading, view ) {
                     if(isLoading) {
-                        //display spinner's div
+                        $(".loading").removeClass('hidden');
                     } else {
-                        //and hide
+                        $(".loading").addClass('hidden');
                     }
                 }
             });

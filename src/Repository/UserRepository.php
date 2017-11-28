@@ -38,4 +38,17 @@ class UserRepository extends EntityRepository
         }
         return $users;
     }
+
+    /**
+     * @return User|array
+     * @throws \Exception
+     */
+    public function getListActive()
+    {
+        $users = $this->findBy(array('isActive' => 1));
+        if (empty(array_filter($users))) {
+            throw new \Exception;
+        }
+        return $users;
+    }
 }

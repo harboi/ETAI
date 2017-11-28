@@ -29,20 +29,4 @@ class IndexController extends Controller
     {
         return $this->redirectToRoute('admin');
     }
-
-    /**
-     * @Route("/transmissions", name="transmissions")
-     */
-    public function transmissionsAction()
-    {
-        try {
-            /** @var  TransmissionRepository $repo */
-            $repo = $this->getDoctrine()->getManager()->getRepository('\App\Entity\Transmission');
-            $list = $repo->getList();
-        } catch (\Exception $e) {
-            $list = 'error';
-        }
-        return $this->render('transmissions.html.twig', ['transmissions' => $list]);
-    }
-
 }

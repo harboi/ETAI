@@ -1,5 +1,42 @@
 {% extends "/backend/layout.html.twig" %}
 
 {% block main %}
-    <h1 class="text-center">ACCUEIL ETAI</h1>
+    <h1 class="text-center no-margin">ACCUEIL ETAI</h1>
+
+    <h3>Alerte Soin</h3>
+    <hr class="alert-danger">
+    {% for transmission in transmissions|default([]) %}
+        <div class="row">
+            <div class="col-xs-6 col-sm-6 col-md-2 image">
+                <img class="img-responsive" src="/images/resident/{{ transmission.resident.image }}"
+                     alt="image de {{ transmission.resident }}">
+            </div>
+
+            <div class="col-xs-6 col-sm-6 col-md-2 resident">
+                <a href="./?action=show&entity=Residents_actuels&id={{ transmission.resident.id }}">
+                    {{ transmission.resident }}
+                </a>
+                <br>
+                <br><span class="small">Enregistrée par :</span>
+                <br>
+                <a class="small" href="./?action=show&entity=Personnel&id={{ transmission.user.id }}">
+                    {{ transmission.user }}
+                </a>
+            </div>
+
+            <div class="col-xs-12 col-sm-12 col-md-8 alerteSoin">
+                <p>
+                    <strong>{{ transmission.createdat|date("d/m/Y, H:i") }} - {{ transmission.maisonnee }}</strong>
+                    <br>{{ transmission.alertesoin|nl2br }}
+                </p>
+                <br>
+                <a class="hidden-print" href="./?action=show&entity=Educative&id={{ transmission.id }}">
+                    Voir la transmission complète
+                </a>
+            </div>
+        </div>
+        <hr class="alert-danger">
+    {% else %}
+        Aucune alerte
+    {% endfor %}
 {% endblock %}

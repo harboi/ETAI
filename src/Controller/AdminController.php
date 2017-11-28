@@ -37,18 +37,25 @@ class AdminController extends BaseAdminController
      */
     public function accueilAction()
     {
-        return $this->render('accueil.html.twig');
+        try {
+            /** @var  TransmissionRepository $repo */
+            $repo = $this->getDoctrine()->getManager()->getRepository('\App\Entity\Transmission');
+            $list = $repo->getListWithAlerteSoin();
+        } catch (\Exception $e) {
+            $list = 'error';
+        }
+        return $this->render('accueil.html.twig', ['transmissions' => $list]);
     }
 
     /**
      * @Route("/calendrier", name="calendar")
      */
-    public function calendrierAction()
+    public function calendarAction()
     {
         try {
             /** @var  ResidentRepository $residentRepo */
             $residentRepo = $this->getDoctrine()->getManager()->getRepository('\App\Entity\Resident');
-            $residentList = $residentRepo->getList();
+            $residentList = $residentRepo->getListActive();
         } catch (\Exception $e) {
             $residentList = null;
         }
@@ -56,7 +63,7 @@ class AdminController extends BaseAdminController
         try {
             /** @var  UserRepository $userRepo */
             $userRepo = $this->getDoctrine()->getManager()->getRepository('\App\Entity\User');
-            $userList = $userRepo->getList();
+            $userList = $userRepo->getListActive();
 
         } catch (\Exception $e) {
             $userList = null;
@@ -99,11 +106,12 @@ class AdminController extends BaseAdminController
         $listForCalendar = array();
         /** @var  Transmission $transmission */
         foreach ($transmissionList as $transmission) {
-            $type = $transmission->getType() ? 'Educative':'Soin';
+            $type = $transmission->getType() ? 'Soin':'Educative';
             $url = "./?action=show&entity=$type&id=".$transmission->getId();
+            $residentName = ($transmission->getResident()) ? $transmission->getResident()->__toString() : 'Aucun(e)';
             $mappedTransmission = [
                 'start' => $transmission->getCreatedAt()->format('Y-m-d H:i:s'),
-                'title' => $transmission->getResident()->__toString(),
+                'title' => $residentName,
                 'url' => $url,
                 'color' => ($type == 'Educative') ? '#16a085':'#d35400'
             ];
@@ -122,6 +130,11 @@ class AdminController extends BaseAdminController
             // transmission educative = 0
             $entity->setType(false);
         }
+
+        if (method_exists($entity, 'setUser')) {
+            // transmission educative = 0
+            $entity->setUser($this->getUser());
+        }
     }
 
     public function prePersistSoinEntity($entity)
@@ -129,6 +142,11 @@ class AdminController extends BaseAdminController
         if (method_exists($entity, 'setType')) {
             // transmission soin = 0
             $entity->setType(true);
+        }
+
+        if (method_exists($entity, 'setUser')) {
+            // transmission soin = 0
+            $entity->setUser($this->getUser());
         }
     }
 
@@ -157,8 +175,6 @@ class AdminController extends BaseAdminController
                 $entity->setPassword($encodedPassword);
                 $entity->setOldPassword($encodedPassword);
             }
-
-
         }
     }
 

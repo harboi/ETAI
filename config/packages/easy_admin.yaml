@@ -14,6 +14,8 @@ easy_admin:
             - { name: 'delete', icon: 'close', label: false }
     show:
         actions: ['-edit', '-delete']
+    edit:
+        actions: ['-delete']
     design:
         color_scheme: 'dark' # dark | light
         brand_color: '#34495e'
@@ -199,7 +201,7 @@ easy_admin:
                     #- { property: 'type', label: 'Type', type: 'choice', type_options: { choices: {'Soin':1, 'Educative':0 } } }
                     #- { property: 'name', label: 'Descriptif court' }
                     - { property: 'resident', label: 'Résident' }
-                    - { property: 'user', label: 'Personnel' }
+                    #- { property: 'user', label: 'Personnel' }
                     - { property: 'maisonnee', label: 'Maisonnée' }
                     - { property: 'description', label: 'Contenu Educatif' }
                     - { property: 'alerteSoin', label: 'Alerte Soin' }
@@ -233,7 +235,7 @@ easy_admin:
                     #- { property: 'name', label: 'Descriptif court' }
                     - { property: 'description', label: 'Contenu Soin' }
                     - { property: 'resident', label: 'Résident' }
-                    - { property: 'user', label: 'Personnel' }
+                    #- { property: 'user', label: 'Personnel' }
                     - { property: 'maisonnee', label: 'Maisonnée' }
 
         Maisonnee:

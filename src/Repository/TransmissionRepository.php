@@ -44,7 +44,26 @@ class TransmissionRepository extends EntityRepository
      * @return Transmission|array
      * @throws \Exception
      */
-    public function getListFromParameters($start, $end, $resident, $personnel, $maisonnee)
+    public function getListWithAlerteSoin()
+    {
+        $Transmissions = $this->createQueryBuilder('t')
+            ->setMaxResults('10')
+            ->addSelect('t')
+            ->where('t.type = 0')
+            ->andWhere('t.alerteSoin IS NOT NULL')
+            ->orderBy('t.createdAt', 'DESC')
+            ->getQuery()->getResult();
+        if (empty(array_filter($Transmissions))) {
+            throw new \Exception;
+        }
+        return $Transmissions;
+    }
+
+    /**
+     * @return Transmission|array
+     * @throws \Exception
+     */
+    public function getListFromParameters($start, $end, $resident = null, $personnel = null, $maisonnee = null)
     {
         $start = new \DateTime($start);
         $end = new \DateTime($end);

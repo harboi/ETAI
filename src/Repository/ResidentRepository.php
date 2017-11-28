@@ -38,4 +38,17 @@ class ResidentRepository extends EntityRepository
         }
         return $residents;
     }
+
+    /**
+     * @return Resident|array
+     * @throws \Exception
+     */
+    public function getListActive()
+    {
+        $residents = $this->findBy(array('isActive' => 1));
+        if (empty(array_filter($residents))) {
+            throw new \Exception;
+        }
+        return $residents;
+    }
 }
