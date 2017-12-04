@@ -49,7 +49,7 @@ div.image img {
     }
 }
 
-[data-label="Alerte Soin"], .alerteSoin .form-control , .alerteSoin span {
+[data-label="Alerte Soin"], .alerteSoin .form-control , span.alerteSoin {
     font-weight: bold;
     color:darkred;
 }

@@ -29,7 +29,7 @@
                         <strong>{{ transmission.createdat|date("d/m/Y, H:i") }}
                             - {{ transmission.maisonnee|default('') }}</strong>
                         <br>
-                        <span class="alerteSoin">
+                        <span>
                             {{ transmission.description|nl2br }}
                         </span>
                         {% if transmission.alertesoin is not empty %}
@@ -73,7 +73,7 @@
                 </a>
             </div>
 
-            <div class="col-xs-12 col-sm-12 col-md-8 alerteSoin">
+            <div class="col-xs-12 col-sm-12 col-md-8">
                 <p>
                     <strong>{{ transmission.createdat|date("d/m/Y, H:i") }}
                         - {{ transmission.maisonnee|default('') }}</strong>
@@ -118,7 +118,7 @@
                         <strong>{{ transmission.createdat|date("d/m/Y, H:i") }}
                             - {{ transmission.maisonnee|default('') }}</strong>
                         <br>
-                        <span class="alerteSoin">
+                        <span>
                             {{ transmission.description|nl2br }}
                         </span>
                         {% if transmission.alertesoin is not empty %}
@@ -160,6 +160,6 @@
             </div>
         </div>
     {% else %}
-        Aucune Transmission Educative
+        Aucune Transmission Générale
     {% endfor %}
 {% endblock %}
