@@ -2,41 +2,164 @@
 
 {% block main %}
     <h1 class="text-center no-margin">ACCUEIL ETAI</h1>
+    {% if 'ROLE_SOIGNANT' in userRoles %}
+        <h3><i class="fa fa-futbol-o"></i> Dernières Transmissions Educatives</h3>
+        {% for transmission in transmissionsEducatives|default([]) %}
+            <hr style="border-color:#16a085;">
+            <div class="row">
+                <div class="col-xs-6 col-sm-6 col-md-2 image">
+                    <img class="img-responsive" src="/images/resident/{{ transmission.resident.image|default('') }}"
+                         alt="image de {{ transmission.resident|default('') }}">
+                </div>
 
-    <h3>Alerte Soin</h3>
-    <hr class="alert-danger">
-    {% for transmission in transmissions|default([]) %}
+                <div class="col-xs-6 col-sm-6 col-md-2 resident">
+                    <a href="./?action=show&entity=Residents_actuels&id={{ transmission.resident.id|default('') }}">
+                        {{ transmission.resident|default('') }}
+                    </a>
+                    <br>
+                    <br><span class="small">Enregistrée par :</span>
+                    <br>
+                    <a class="small" href="./?action=show&entity=Personnel&id={{ transmission.user.id|default('') }}">
+                        {{ transmission.user|default('') }}
+                    </a>
+                </div>
+
+                <div class="col-xs-12 col-sm-12 col-md-8">
+                    <p>
+                        <strong>{{ transmission.createdat|date("d/m/Y, H:i") }}
+                            - {{ transmission.maisonnee|default('') }}</strong>
+                        <br>
+                        <span class="alerteSoin">
+                            {{ transmission.description|nl2br }}
+                        </span>
+                        {% if transmission.alertesoin is not empty %}
+                        <br>
+                        <br>
+                        <span class="alerteSoin">
+                                <strong>Alerte Soin : </strong>
+                            {{ transmission.alertesoin|nl2br }}
+                            </span>
+                        {% endif %}
+                    </p>
+                    <br>
+                    <a class="hidden-print" href="./?action=show&entity=Educative&id={{ transmission.id }}">
+                        Voir la transmission complète
+                    </a>
+                </div>
+            </div>
+        {% else %}
+            Aucune Transmission Educative
+        {% endfor %}
+    {% endif %}
+
+    <h3><i class="fa fa-heartbeat"></i> Dernières Transmissions Soins</h3>
+    {% for transmission in transmissionsSoins|default([]) %}
+        <hr class="alert-danger">
         <div class="row">
             <div class="col-xs-6 col-sm-6 col-md-2 image">
-                <img class="img-responsive" src="/images/resident/{{ transmission.resident.image }}"
-                     alt="image de {{ transmission.resident }}">
+                <img class="img-responsive" src="/images/resident/{{ transmission.resident.image|default('') }}"
+                     alt="image de {{ transmission.resident|default('') }}">
             </div>
 
             <div class="col-xs-6 col-sm-6 col-md-2 resident">
-                <a href="./?action=show&entity=Residents_actuels&id={{ transmission.resident.id }}">
-                    {{ transmission.resident }}
+                <a href="./?action=show&entity=Residents_actuels&id={{ transmission.resident.id|default('') }}">
+                    {{ transmission.resident|default('') }}
                 </a>
                 <br>
                 <br><span class="small">Enregistrée par :</span>
                 <br>
-                <a class="small" href="./?action=show&entity=Personnel&id={{ transmission.user.id }}">
-                    {{ transmission.user }}
+                <a class="small" href="./?action=show&entity=Personnel&id={{ transmission.user.id|default('') }}">
+                    {{ transmission.user|default('') }}
                 </a>
             </div>
 
             <div class="col-xs-12 col-sm-12 col-md-8 alerteSoin">
                 <p>
-                    <strong>{{ transmission.createdat|date("d/m/Y, H:i") }} - {{ transmission.maisonnee }}</strong>
-                    <br>{{ transmission.alertesoin|nl2br }}
+                    <strong>{{ transmission.createdat|date("d/m/Y, H:i") }}
+                        - {{ transmission.maisonnee|default('') }}</strong>
+                    <br>{{ transmission.description|nl2br }}
                 </p>
                 <br>
-                <a class="hidden-print" href="./?action=show&entity=Educative&id={{ transmission.id }}">
+                <a class="hidden-print" href="./?action=show&entity=Soin&id={{ transmission.id }}">
                     Voir la transmission complète
                 </a>
             </div>
         </div>
-        <hr class="alert-danger">
     {% else %}
-        Aucune alerte
+        Aucune Transmission Soin
+    {% endfor %}
+
+
+
+    {% if 'ROLE_SOIGNANT' not in userRoles %}
+        <h3><i class="fa fa-futbol-o"></i> Dernières Transmissions Educatives</h3>
+        {% for transmission in transmissionsEducatives|default([]) %}
+            <hr style="border-color:#16a085;">
+            <div class="row">
+                <div class="col-xs-6 col-sm-6 col-md-2 image">
+                    <img class="img-responsive" src="/images/resident/{{ transmission.resident.image|default('') }}"
+                         alt="image de {{ transmission.resident|default('') }}">
+                </div>
+
+                <div class="col-xs-6 col-sm-6 col-md-2 resident">
+                    <a href="./?action=show&entity=Residents_actuels&id={{ transmission.resident.id|default('') }}">
+                        {{ transmission.resident|default('') }}
+                    </a>
+                    <br>
+                    <br><span class="small">Enregistrée par :</span>
+                    <br>
+                    <a class="small" href="./?action=show&entity=Personnel&id={{ transmission.user.id|default('') }}">
+                        {{ transmission.user|default('') }}
+                    </a>
+                </div>
+
+                <div class="col-xs-12 col-sm-12 col-md-8">
+                    <p>
+                        <strong>{{ transmission.createdat|date("d/m/Y, H:i") }}
+                            - {{ transmission.maisonnee|default('') }}</strong>
+                        <br>
+                        <span class="alerteSoin">
+                            {{ transmission.description|nl2br }}
+                        </span>
+                        {% if transmission.alertesoin is not empty %}
+                        <br>
+                        <br>
+                        <span class="alerteSoin">
+                                <strong>Alerte Soin : </strong>
+                            {{ transmission.alertesoin|nl2br }}
+                            </span>
+                        {% endif %}
+                    </p>
+                    <br>
+                    <a class="hidden-print" href="./?action=show&entity=Educative&id={{ transmission.id }}">
+                        Voir la transmission complète
+                    </a>
+                </div>
+            </div>
+        {% else %}
+            Aucune Transmission Educative
+        {% endfor %}
+    {% endif %}
+
+    <h3><i class="fa fa-sticky-note"></i> Dernières Transmissions Générales</h3>
+    {% for transmission in transmissionsGenerales|default([]) %}
+        <hr style="border-color:silver;">
+        <div class="row">
+            <div class="col-xs-6 col-sm-6 col-md-2 image">
+                <strong>{{ transmission.createdat|date("d/m/Y, H:i") }}</strong>
+            </div>
+
+            <div class="col-xs-12 col-sm-12 col-md-8 transmission">
+                <strong class="transmission-{{ transmission.statut|default('') }}">{{ transmission.statut|default('') }}
+                    - {{ transmission.maisonnee|default('Toutes les maisonnées') }}</strong>
+                <p>{{ transmission.message|nl2br }}</p>
+                <br>
+                <a class="hidden-print" href="./?action=show&entity=Generique&id={{ transmission.id }}">
+                    Voir la transmission complète
+                </a>
+            </div>
+        </div>
+    {% else %}
+        Aucune Transmission Educative
     {% endfor %}
 {% endblock %}

@@ -11,6 +11,7 @@ namespace App\Controller;
 use App\Entity\Transmission;
 use App\Repository\MaisonneeRepository;
 use App\Repository\ResidentRepository;
+use App\Repository\TransmissionGeneriqueRepository;
 use App\Repository\TransmissionRepository;
 use App\Repository\UserRepository;
 use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
@@ -40,11 +41,42 @@ class AdminController extends BaseAdminController
         try {
             /** @var  TransmissionRepository $repo */
             $repo = $this->getDoctrine()->getManager()->getRepository('\App\Entity\Transmission');
+            $transmissionsEducatives = $repo->getLastEducative();
+        } catch (\Exception $e) {
+            $transmissionsEducatives = '';
+        }
+
+        try {
+            /** @var  TransmissionRepository $repo */
+            $repo = $this->getDoctrine()->getManager()->getRepository('\App\Entity\Transmission');
+            $transmissionsSoins = $repo->getLastSoin();
+        } catch (\Exception $e) {
+            $transmissionsSoins = '';
+        }
+
+        try {
+            /** @var  TransmissionGeneriqueRepository $repo */
+            $repo = $this->getDoctrine()->getManager()->getRepository('\App\Entity\TransmissionGenerique');
+            $transmissionsGenerales = $repo->getLast();
+        } catch (\Exception $e) {
+            $transmissionsGenerales = '';
+        }
+        return $this->render('accueil.html.twig', ['transmissionsEducatives' => $transmissionsEducatives, 'transmissionsSoins' => $transmissionsSoins, 'transmissionsGenerales' => $transmissionsGenerales]);
+    }
+
+    /**
+     * @Route("/alerteSoin", name="alerteSoin")
+     */
+    public function alerteSoinAction()
+    {
+        try {
+            /** @var  TransmissionRepository $repo */
+            $repo = $this->getDoctrine()->getManager()->getRepository('\App\Entity\Transmission');
             $list = $repo->getListWithAlerteSoin();
         } catch (\Exception $e) {
             $list = 'error';
         }
-        return $this->render('accueil.html.twig', ['transmissions' => $list]);
+        return $this->render('alerteSoin.html.twig', ['transmissions' => $list]);
     }
 
     /**
@@ -184,6 +216,7 @@ class AdminController extends BaseAdminController
      * remove any entity.
      *
      * @return RedirectResponse
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     protected function deleteResidents_actuelsAction()
     {

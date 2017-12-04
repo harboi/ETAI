@@ -2,6 +2,10 @@
     padding: 0;
 }
 
+div.image img {
+    max-height:100px;
+}
+
 @media print {
     .btn {
         display: none !important
@@ -45,6 +49,29 @@
     }
 }
 
+[data-label="Alerte Soin"], .alerteSoin .form-control , .alerteSoin span {
+    font-weight: bold;
+    color:darkred;
+}
+
+.transmission-Info {
+    padding:5px 10px;
+    display: inline-block;
+    color: #ffffff;
+    background-color: #0000ff;
+}
+.transmission-Important {
+    padding:5px 10px;
+    display: inline-block;
+    color: #000000;
+    background-color: #ff9900;
+}
+.transmission-Urgent {
+    padding:5px 10px;
+    display: inline-block;
+    color: #ffffff;
+    background-color: #990000;
+}
 
 /* Absolute Center Spinner */
 .loading {

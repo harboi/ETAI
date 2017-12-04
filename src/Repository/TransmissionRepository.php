@@ -63,6 +63,42 @@ class TransmissionRepository extends EntityRepository
      * @return Transmission|array
      * @throws \Exception
      */
+    public function getLastEducative()
+    {
+        $Transmissions = $this->createQueryBuilder('t')
+            ->setMaxResults('5')
+            ->addSelect('t')
+            ->where('t.type = 0')
+            ->orderBy('t.createdAt', 'DESC')
+            ->getQuery()->getResult();
+        if (empty(array_filter($Transmissions))) {
+            throw new \Exception;
+        }
+        return $Transmissions;
+    }
+
+    /**
+     * @return Transmission|array
+     * @throws \Exception
+     */
+    public function getLastSoin()
+    {
+        $Transmissions = $this->createQueryBuilder('t')
+            ->setMaxResults('5')
+            ->addSelect('t')
+            ->where('t.type = 1')
+            ->orderBy('t.createdAt', 'DESC')
+            ->getQuery()->getResult();
+        if (empty(array_filter($Transmissions))) {
+            throw new \Exception;
+        }
+        return $Transmissions;
+    }
+
+    /**
+     * @return Transmission|array
+     * @throws \Exception
+     */
     public function getListFromParameters($start, $end, $resident = null, $personnel = null, $maisonnee = null)
     {
         $start = new \DateTime($start);

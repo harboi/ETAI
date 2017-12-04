@@ -36,6 +36,7 @@ easy_admin:
               children:
                 - { label: 'Soins', entity: 'Soin' }
                 - { label: 'Educatives', entity: 'Educative' }
+                - { label: 'Générale', entity: 'Generique', required_role: ["ROLE_ADMIN"] }
             - label: 'Résidents'
               icon: 'users'
               children:
@@ -182,7 +183,7 @@ easy_admin:
                     - { property: 'user', label: 'Personnel' }
                     - { property: 'maisonnee', label: 'Maisonnée' }
                     - { property: 'description', label: 'Contenu Educatif' }
-                    - { property: 'alerteSoin', label: 'Alerte Soin' }
+                    - { property: 'alerteSoin', label: 'Alerte Soin', css_class: 'alerteSoin' }
             list:
                 title: 'Liste des Transmissions éducatives'
                 dql_filter: 'entity.type = 0'
@@ -204,7 +205,7 @@ easy_admin:
                     #- { property: 'user', label: 'Personnel' }
                     - { property: 'maisonnee', label: 'Maisonnée' }
                     - { property: 'description', label: 'Contenu Educatif' }
-                    - { property: 'alerteSoin', label: 'Alerte Soin' }
+                    - { property: 'alerteSoin', label: 'Alerte Soin', css_class: 'alerteSoin' }
 
         Soin:
             class: App\Entity\Transmission
@@ -238,6 +239,29 @@ easy_admin:
                     #- { property: 'user', label: 'Personnel' }
                     - { property: 'maisonnee', label: 'Maisonnée' }
 
+        Generique:
+            class: App\Entity\TransmissionGenerique
+            show:
+                title: 'Fiche de Transmission Générale'
+                fields:
+                    - { property: 'createdAt', label: 'Date' }
+                    - { property: 'statut' }
+                    - { property: 'message' }
+                    - { property: 'maisonnee', label: 'Maisonnée' }
+            list:
+                title: 'Liste des Transmissions Générales'
+                fields:
+                    - { property: 'createdAt', label: 'Date' }
+                    - { property: 'statut' }
+                    - { property: 'message' }
+                    - { property: 'maisonnee', label: 'Maisonnée' }
+            form:
+                title: 'Formulaire Transmission Générale'
+                fields:
+                    - { property: 'createdAt', label: 'Date', css_class: 'date', type_options: { widget: 'single_text', 'format': 'dd/MM/yyyy H:mm', 'attr': { 'class': 'dateTimePicker' } } }
+                    - { property: 'Statut', type: 'choice', type_options: { choices: {'Info':Info, 'Important':Important, 'Urgent':Urgent} } }
+                    - { property: 'message' }
+                    - { property: 'maisonnee', label: 'Maisonnée' }
         Maisonnee:
             class: App\Entity\Maisonnee
             show:
