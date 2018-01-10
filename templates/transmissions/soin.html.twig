@@ -1,0 +1,36 @@
+<h3><i class="fa fa-heartbeat"></i> Dernières Transmissions Soins</h3>
+{% for transmission in transmissionsSoins|default([]) %}
+    <hr class="alert-danger">
+    <div class="row">
+        <div class="col-xs-6 col-sm-6 col-md-2 image">
+            <img class="img-responsive" src="/images/resident/{{ transmission.resident.image|default('') }}"
+                 alt="image de {{ transmission.resident|default('') }}">
+        </div>
+
+        <div class="col-xs-6 col-sm-6 col-md-2 resident">
+            <a href="./?action=show&entity=Residents_actuels&id={{ transmission.resident.id|default('') }}">
+                {{ transmission.resident|default('') }}
+            </a>
+            <br>
+            <br><span class="small">Enregistrée par :</span>
+            <br>
+            <a class="small" href="./?action=show&entity=Personnel&id={{ transmission.user.id|default('') }}">
+                {{ transmission.user|default('') }}
+            </a>
+        </div>
+
+        <div class="col-xs-12 col-sm-12 col-md-8">
+            <p>
+                <strong>{{ transmission.createdat|date("d/m/Y, H:i") }}
+                    - {{ transmission.maisonnee|default('') }}</strong>
+                <br>{{ transmission.description|nl2br }}
+            </p>
+            <br>
+            <a class="hidden-print" href="./?action=show&entity=Soin&id={{ transmission.id }}">
+                Voir la transmission complète
+            </a>
+        </div>
+    </div>
+{% else %}
+    Aucune Transmission Soin
+{% endfor %}

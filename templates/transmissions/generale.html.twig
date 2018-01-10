@@ -1,0 +1,21 @@
+<h3><i class="fa fa-sticky-note"></i> Dernières Transmissions Générales</h3>
+{% for transmission in transmissionsGenerales|default([]) %}
+    <hr style="border-color:silver;">
+    <div class="row">
+        <div class="col-xs-6 col-sm-6 col-md-2 image">
+            <strong>{{ transmission.createdat|date("d/m/Y, H:i") }}</strong>
+        </div>
+
+        <div class="col-xs-12 col-sm-12 col-md-8 transmission">
+            <strong class="transmission-{{ transmission.statut|default('') }}">{{ transmission.statut|default('') }}
+                - {{ transmission.maisonnee|default('Toutes les maisonnées') }}</strong>
+            <p>{{ transmission.message|nl2br }}</p>
+            <br>
+            <a class="hidden-print" href="./?action=show&entity=Generique&id={{ transmission.id }}">
+                Voir la transmission complète
+            </a>
+        </div>
+    </div>
+{% else %}
+    Aucune Transmission Générale
+{% endfor %}
