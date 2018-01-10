@@ -40,8 +40,8 @@ easy_admin:
             - label: 'Résidents'
               icon: 'users'
               children:
-                - { label: 'Actuels', entity: 'Residents_actuels'}
-                - { label: 'Passés', entity: 'Residents_passes', required_role: ["ROLE_ADMIN"] }
+                - { label: 'Présents', entity: 'Residents_actuels'}
+                - { label: 'Sortis', entity: 'Residents_passes', required_role: ["ROLE_ADMIN"] }
             - { label: 'Personnel', entity: 'Personnel', icon: 'user' }
             - { label: 'Maisonnées', entity: 'Maisonnee', icon: 'home', required_role: ["ROLE_ADMIN"] }
     formats:
@@ -101,8 +101,8 @@ easy_admin:
                     - { property: 'isActive', label: 'Compte activé' }
 
         Residents_actuels:
-            label: 'Résidents actuels'
-            title: 'Résidents actuels'
+            label: 'Résidents présents'
+            title: 'Résidents présents'
             class: App\Entity\Resident
             show:
                 title: 'Fiche Résident'
@@ -113,7 +113,7 @@ easy_admin:
                     - { property: 'ficheAlimentaire', label: 'Fiche Alimentaire'}
                     - { property: 'description', label: 'Autre'}
                     - { property: 'maisonnee', label: 'Maisonnée' }
-                    - { property: 'isActive', label: 'Résident actuel' }
+                    - { property: 'isActive', label: 'Résident présent' }
             list:
                 title: 'Liste des résidents'
                 dql_filter: 'entity.isActive = 1'
@@ -134,15 +134,15 @@ easy_admin:
                     - { property: 'description', label: 'Autre'}
                     - { property: 'imageFile', type: 'vich_image', label: 'Photo' }
                     - { property: 'maisonnee', label: 'Maisonnée' }
-                    - { property: 'isActive', type: 'checkbox', label: 'Résident actuel' }
+                    - { property: 'isActive', type: 'checkbox', label: 'Résident présent' }
                     #- { property: 'password', type: 'repeated', type_options: { first_options: { label: 'Mot de P' }, second_options: { label: 'Confirmer Mot de P' }, required: false } }
 
         Residents_passes:
-            label: 'Résidents passés'
+            label: 'Résidents sortis'
             class: App\Entity\Resident
             disabled_actions: ['new']
             show:
-                title: 'Fiche Résident passé'
+                title: 'Fiche Résident sorti'
                 fields:
                     - nom
                     - { property: 'prenom', label: 'Prénom'}
@@ -150,9 +150,9 @@ easy_admin:
                     - { property: 'ficheAlimentaire', label: 'Fiche Alimentaire'}
                     - { property: 'description', label: 'Autre'}
                     - { property: 'maisonnee', label: 'Maisonnée' }
-                    - { property: 'isActive', label: 'Réside actuellement' }
+                    - { property: 'isActive', label: 'Résident présent' }
             list:
-                title: 'Liste des résidents passés'
+                title: 'Liste des résidents sortis'
                 dql_filter: 'entity.isActive = 0'
                 fields:
                     - { property: 'image', type: 'image', base_path: '%app.path.resident_images%', label: 'Photo' }
@@ -171,7 +171,7 @@ easy_admin:
                     - { property: 'description', label: 'Autre'}
                     - { property: 'imageFile', type: 'vich_image', label: 'Photo' }
                     - { property: 'maisonnee', label: 'Maisonnée' }
-                    - { property: 'isActive', type: 'checkbox', label: 'Résident actuel' }
+                    - { property: 'isActive', type: 'checkbox', label: 'Résident présent' }
         Educative:
             class: App\Entity\Transmission
             show:
