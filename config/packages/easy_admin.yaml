@@ -110,8 +110,9 @@ easy_admin:
                     - nom
                     - { property: 'prenom', label: 'Prénom'}
                     - { property: 'image', type: 'image', base_path: '%app.path.resident_images%', label: 'Photo' }
+                    - { property: 'description', label: 'Fiche Administrative'}
                     - { property: 'ficheAlimentaire', label: 'Fiche Alimentaire'}
-                    - { property: 'description', label: 'Autre'}
+                    - { property: 'ficheMedicale', label: 'Fiche Médicale'}
                     - { property: 'maisonnee', label: 'Maisonnée' }
                     - { property: 'isActive', label: 'Résident présent' }
             list:
@@ -121,8 +122,9 @@ easy_admin:
                     - { property: 'image', type: 'image', base_path: '%app.path.resident_images%', label: 'Photo' }
                     - nom
                     - { property: 'prenom', label: 'Prénom'}
+                    - { property: 'description', label: 'Fiche Administrative'}
                     - { property: 'ficheAlimentaire', label: 'Fiche Alimentaire'}
-                    - { property: 'description', label: 'Autre'}
+                    - { property: 'ficheMedicale', label: 'Fiche Médicale'}
                     - { property: 'maisonnee', label: 'Maisonnée' }
             form:
                 title: 'Formulaire Résident'
@@ -130,8 +132,9 @@ easy_admin:
                     #- { property: 'createdAt', type: 'birthday', label: 'Résident depuis le' }
                     - nom
                     - { property: 'prenom', label: 'Prénom'}
+                    - { property: 'description', label: 'Fiche Administrative'}
                     - { property: 'ficheAlimentaire', label: 'Fiche Alimentaire'}
-                    - { property: 'description', label: 'Autre'}
+                    - { property: 'ficheMedicale', label: 'Fiche Médicale'}
                     - { property: 'imageFile', type: 'vich_image', label: 'Photo' }
                     - { property: 'maisonnee', label: 'Maisonnée' }
                     - { property: 'isActive', type: 'checkbox', label: 'Résident présent' }
@@ -147,8 +150,9 @@ easy_admin:
                     - nom
                     - { property: 'prenom', label: 'Prénom'}
                     - { property: 'image', type: 'image', base_path: '%app.path.resident_images%', label: 'Photo' }
+                    - { property: 'description', label: 'Fiche Administrative'}
                     - { property: 'ficheAlimentaire', label: 'Fiche Alimentaire'}
-                    - { property: 'description', label: 'Autre'}
+                    - { property: 'ficheMedicale', label: 'Fiche Médicale'}
                     - { property: 'maisonnee', label: 'Maisonnée' }
                     - { property: 'isActive', label: 'Résident présent' }
             list:
@@ -158,8 +162,9 @@ easy_admin:
                     - { property: 'image', type: 'image', base_path: '%app.path.resident_images%', label: 'Photo' }
                     - nom
                     - { property: 'prenom', label: 'Prénom'}
+                    - { property: 'description', label: 'Fiche Administrative'}
                     - { property: 'ficheAlimentaire', label: 'Fiche Alimentaire'}
-                    - { property: 'description', label: 'Autre'}
+                    - { property: 'ficheMedicale', label: 'Fiche Médicale'}
                     - { property: 'maisonnee', label: 'Maisonnée' }
             form:
                 title: 'Formulaire Résident'
@@ -167,8 +172,9 @@ easy_admin:
                     #- { property: 'createdAt', type: 'birthday', label: 'Résident depuis le' }
                     - nom
                     - { property: 'prenom', label: 'Prénom'}
+                    - { property: 'description', label: 'Fiche Administrative'}
                     - { property: 'ficheAlimentaire', label: 'Fiche Alimentaire'}
-                    - { property: 'description', label: 'Autre'}
+                    - { property: 'ficheMedicale', label: 'Fiche Médicale'}
                     - { property: 'imageFile', type: 'vich_image', label: 'Photo' }
                     - { property: 'maisonnee', label: 'Maisonnée' }
                     - { property: 'isActive', type: 'checkbox', label: 'Résident présent' }

@@ -82,6 +82,11 @@ class Resident {
     private $ficheAlimentaire;
 
     /**
+     * @ORM\Column(type="text", nullable=true)
+     * */
+    private $ficheMedicale;
+
+    /**
      * @var Transmission|ArrayCollection
      * @ORM\OneToMany(targetEntity="Transmission", mappedBy="resident")
      */
@@ -291,6 +296,22 @@ class Resident {
     public function setFicheAlimentaire($ficheAlimentaire)
     {
         $this->ficheAlimentaire = $ficheAlimentaire;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFicheMedicale()
+    {
+        return $this->ficheMedicale;
+    }
+
+    /**
+     * @param mixed $ficheMedicale
+     */
+    public function setFicheMedicale($ficheMedicale)
+    {
+        $this->ficheMedicale = $ficheMedicale;
     }
 
     /**
