@@ -65,7 +65,7 @@ easy_admin:
                     - { property: 'prenom', label: 'Prénom'}
                     - adresse
                     - { property: 'isAdmin', label: 'Administrateur' }
-                    - { property: 'isEducateur', label: 'Éducateur' }
+                    - { property: 'isEducateur', label: 'Accompagnant' }
                     - { property: 'isSoignant', label: 'Soignant' }
                     - { property: 'maisonnee', label: 'Maisonnée' }
                     - { property: 'isActive', label: 'Compte activé' }
@@ -76,7 +76,7 @@ easy_admin:
                     - nom
                     - { property: 'prenom', label: 'Prénom'}
                     - { property: 'image', type: 'image', base_path: '%app.path.user_images%', label: 'Photo' }
-                    - { property: 'isEducateur', type: 'boolean', label: 'Éducateur' }
+                    - { property: 'isEducateur', type: 'boolean', label: 'Accompagnant' }
                     - { property: 'isSoignant', type: 'boolean', label: 'Soigant' }
                     #- { property: 'email', type: 'email', label: 'Adresse eMail' }
             form:
@@ -94,7 +94,7 @@ easy_admin:
                     - { property: 'imageFile', type: 'vich_image', label: 'Photo' }
                     - { type: 'divider' }
                     - { property: 'isAdmin', label: 'Administrateur' }
-                    - { property: 'isEducateur', label: 'Éducateur' }
+                    - { property: 'isEducateur', label: 'Accompagnant' }
                     - { property: 'isSoignant', label: 'Soignant' }
                     - { property: 'maisonnee', label: 'Maisonnée' }
                     - { type: 'divider' }
