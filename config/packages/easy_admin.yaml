@@ -77,7 +77,7 @@ easy_admin:
                     - { property: 'prenom', label: 'Prénom'}
                     - { property: 'image', type: 'image', base_path: '%app.path.user_images%', label: 'Photo' }
                     - { property: 'isEducateur', type: 'boolean', label: 'Accompagnant' }
-                    - { property: 'isSoignant', type: 'boolean', label: 'Soigant' }
+                    - { property: 'isSoignant', type: 'boolean', label: 'Soignant' }
                     #- { property: 'email', type: 'email', label: 'Adresse eMail' }
             form:
                 fields:
