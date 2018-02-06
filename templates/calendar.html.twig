@@ -1,7 +1,6 @@
 {% extends "/backend/layout.html.twig" %}
 
 
-
 {% block main %}
     <div class="container">
         <div class="row" id="selectOptionsContainer">
@@ -33,10 +32,10 @@
 
             <div class="col-xs-12 col-sm-4">
                 <div class="form-group field-entity">
-                    <label class="control-label" for="maisonnee">Maisonnée</label>
+                    <label class="control-label" for="maisonnee">Unité</label>
                     <select id="maisonnee" name="maisonnee" data-widget="select2"
                             class="form-control select2-hidden-accessible" tabindex="-1" aria-hidden="true">
-                        <option value="">- Toutes les Maisonnées -</option>
+                        <option value="">- Toutes les Unités -</option>
                         {% for maisonnee in maisonneeList %}
                             <option value="{{ maisonnee.id }}">{{ maisonnee }}</option>
                         {% endfor %}

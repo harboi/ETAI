@@ -2,8 +2,13 @@
     padding: 0;
 }
 
+.fc-more-popover {
+    overflow: scroll;
+    max-height: 80%;
+}
+
 div.image img {
-    max-height:100px;
+    max-height: 100px;
 }
 
 @media print {
@@ -44,30 +49,33 @@ div.image img {
         margin: 0 !important;
         padding: 0 !important;
     }
+
     .form-group {
-        padding-top:20px !important;
+        padding-top: 20px !important;
     }
 }
 
-[data-label="Alerte Soin"], .alerteSoin .form-control , span.alerteSoin {
+[data-label="Alerte Soin"], .alerteSoin .form-control, span.alerteSoin {
     font-weight: bold;
-    color:darkred;
+    color: darkred;
 }
 
 .transmission-Info {
-    padding:5px 10px;
+    padding: 5px 10px;
     display: inline-block;
     color: #ffffff;
     background-color: #0000ff;
 }
+
 .transmission-Important {
-    padding:5px 10px;
+    padding: 5px 10px;
     display: inline-block;
     color: #000000;
     background-color: #ff9900;
 }
+
 .transmission-Urgent {
-    padding:5px 10px;
+    padding: 5px 10px;
     display: inline-block;
     color: #ffffff;
     background-color: #990000;
@@ -132,6 +140,7 @@ div.image img {
         transform: rotate(360deg);
     }
 }
+
 @-moz-keyframes spinner {
     0% {
         -webkit-transform: rotate(0deg);
@@ -148,6 +157,7 @@ div.image img {
         transform: rotate(360deg);
     }
 }
+
 @-o-keyframes spinner {
     0% {
         -webkit-transform: rotate(0deg);
@@ -164,6 +174,7 @@ div.image img {
         transform: rotate(360deg);
     }
 }
+
 @keyframes spinner {
     0% {
         -webkit-transform: rotate(0deg);
