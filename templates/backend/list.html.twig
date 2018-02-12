@@ -14,6 +14,11 @@ sortDirection: app.request.get('sortDirection', 'DESC'),
 page: app.request.get('page', 1)
 }) %}
 
+{% set requestFilters = app.request.get('filters', {}) %}
+{% set _request_parameters = _request_parameters|default({})|merge({
+    filters: requestFilters
+}) %}
+
 {% if 'search' == app.request.get('action') %}
     {% set _request_parameters = _request_parameters|merge({
     query: app.request.get('query')|default(''),
@@ -48,6 +53,7 @@ page: app.request.get('page', 1)
         </div>
 
         <div class="col-sm-7">
+
             <div class="global-actions">
                 {% block global_actions %}
                     {% if easyadmin_action_is_enabled_for_list_view('search', _entity_config.name) %}
@@ -67,15 +73,86 @@ page: app.request.get('page', 1)
                                                value="{{ _request_parameters.menuIndex }}">
                                         <input type="hidden" name="submenuIndex"
                                                value="{{ _request_parameters.submenuIndex }}">
-                                        <div class="input-group">
-                                            <input class="form-control" type="search" name="query"
-                                                   value="{{ app.request.get('query')|default('') }}">
-                                            <span class="input-group-btn">
-                                                <button class="btn" type="submit" formtarget="{{ _action.target }}">
-                                                    <i class="fa fa-search"></i>
-                                                    <span class="hidden-xs hidden-sm">{{ _action.label|default('action.search')|trans(_trans_parameters) }}</span>
-                                                </button>
-                                            </span>
+                                        {% for field, value in requestFilters %}
+                                            {% if value is iterable %}
+                                                {% for val in value %}
+                                                    <input type="hidden" name="filters[{{ field }}][]" value="{{ val }}">
+                                                {% endfor %}
+                                            {% else %}
+                                                <input type="hidden" name="filters[{{ field }}]" value="{{ value }}">
+                                            {% endif %}
+                                        {% endfor %}
+
+                                        {% if ('Soin' == _entity_config.name) or ('Educative' == _entity_config.name) %}
+                                        <div class="col-xs-12 col-sm-4">
+                                            <div class="form-group field-entity">
+                                                <label class="control-label" for="resident">Résident</label>
+                                                <select id="resident" name="filters[entity.resident]" data-widget="select2"
+                                                        class="form-control" tabindex="-1" aria-hidden="true">
+                                                    <option value="">- Tous les Résidents -</option>
+                                                    {% for resident in residentList %}
+                                                        <option
+                                                                {% if _request_parameters.filters is defined and _request_parameters.filters['entity.resident'] is defined and _request_parameters.filters['entity.resident'] == resident.id %}
+                                                                    selected
+                                                                {% endif %}
+                                                                value="{{ resident.id }}">
+                                                            {{ resident }}
+                                                        </option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-xs-12 col-sm-4">
+                                            <div class="form-group field-entity">
+                                                <label class="control-label" for="personnel">Personnel</label>
+                                                <select id="personnel" name="filters[entity.user]" data-widget="select2"
+                                                        class="form-control" tabindex="-1" aria-hidden="true">
+                                                    <option value="">- Tout le Personnel -</option>
+                                                    {% for user in userList %}
+                                                        <option
+                                                                {% if _request_parameters.filters is defined and _request_parameters.filters['entity.user'] is defined and _request_parameters.filters['entity.user'] == user.id %}
+                                                                    selected
+                                                                {% endif %}
+                                                                value="{{ user.id }}">
+                                                            {{ user }}
+                                                        </option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-xs-12 col-sm-4">
+                                            <div class="form-group field-entity">
+                                                <label class="control-label" for="maisonnee">Unité</label>
+                                                <select id="maisonnee" name="filters[entity.maisonnee]" data-widget="select2"
+                                                        class="form-control" tabindex="-1" aria-hidden="true">
+                                                    <option value="">- Toutes les Unités -</option>
+                                                    {% for maisonnee in maisonneeList %}
+                                                        <option
+                                                                {% if _request_parameters.filters is defined and _request_parameters.filters['entity.maisonnee'] is defined and _request_parameters.filters['entity.maisonnee'] == maisonnee.id %}
+                                                                    selected
+                                                                {% endif %}
+                                                                value="{{ maisonnee.id }}">
+                                                            {{ maisonnee }}
+                                                        </option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+                                        </div>
+                                        {% endif %}
+
+                                        <div class="col-xs-12">
+                                            <div class="input-group">
+                                                <input class="form-control" type="search" name="query"
+                                                       value="{{ app.request.get('query')|default('') }}">
+                                                <span class="input-group-btn">
+                                                    <button class="btn" type="submit" formtarget="{{ _action.target }}">
+                                                        <i class="fa fa-search"></i>
+                                                        <span class="hidden-xs hidden-sm">{{ _action.label|default('action.search')|trans(_trans_parameters) }}</span>
+                                                    </button>
+                                                </span>
+                                            </div>
                                         </div>
                                     {% endblock %}
                                 </form>

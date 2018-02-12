@@ -16,6 +16,7 @@ use App\Repository\TransmissionRepository;
 use App\Repository\UserRepository;
 use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AdminController as BaseAdminController;
+use AlterPHP\EasyAdminExtensionBundle\Controller\AdminController as EasyAdminExtensionBundle;
 use JavierEguiluz\Bundle\EasyAdminBundle\Event\EasyAdminEvents;
 use JavierEguiluz\Bundle\EasyAdminBundle\Exception\EntityRemoveException;
 use JavierEguiluz\Bundle\EasyAdminBundle\Exception\ForbiddenActionException;
@@ -31,7 +32,7 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 /**
  * @Route("/admin")
  */
-class AdminController extends BaseAdminController
+class AdminController extends EasyAdminExtensionBundle
 {
     /**
      * @Route("/accueil", name="accueil")
@@ -262,6 +263,7 @@ class AdminController extends BaseAdminController
      *
      * @param Request $request
      *
+     * @throws \AlterPHP\EasyAdminExtensionBundle\Controller\AccessDeniedException
      * @return RedirectResponse|Response
      */
     public function indexAction(Request $request)
@@ -279,6 +281,125 @@ class AdminController extends BaseAdminController
         }
 
         return $this->executeDynamicMethod($action . '<EntityName>Action');
+    }
+
+    /**
+     * The method that is executed when the user performs a 'list' action on an entity.
+     *
+     * @return Response
+     */
+    protected function listAction()
+    {
+        $this->dispatch(EasyAdminEvents::PRE_LIST);
+
+        $fields = $this->entity['list']['fields'];
+        $paginator = $this->findAll($this->entity['class'], $this->request->query->get('page', 1), $this->config['list']['max_results'], $this->request->query->get('sortField'), $this->request->query->get('sortDirection'), $this->entity['list']['dql_filter']);
+
+        try {
+            /** @var  ResidentRepository $residentRepo */
+            $residentRepo = $this->getDoctrine()->getManager()->getRepository('\App\Entity\Resident');
+            $residentList = $residentRepo->getListActive();
+        } catch (\Exception $e) {
+            $residentList = null;
+        }
+
+        try {
+            /** @var  UserRepository $userRepo */
+            $userRepo = $this->getDoctrine()->getManager()->getRepository('\App\Entity\User');
+            $userList = $userRepo->getListActive();
+
+        } catch (\Exception $e) {
+            $userList = null;
+        }
+
+        try {
+            /** @var  MaisonneeRepository $maisonneeRepo */
+            $maisonneeRepo = $this->getDoctrine()->getManager()->getRepository('\App\Entity\Maisonnee');
+            $maisonneeList = $maisonneeRepo->getList();
+        } catch (\Exception $e) {
+            $maisonneeList = null;
+        }
+
+        $this->dispatch(EasyAdminEvents::POST_LIST, array('paginator' => $paginator));
+        return $this->render($this->entity['templates']['list'], array(
+            'maisonneeList' => $maisonneeList,
+            'userList' => $userList,
+            'residentList' => $residentList,
+            'paginator' => $paginator,
+            'fields' => $fields,
+            'delete_form_template' => $this->createDeleteForm($this->entity['name'], '__id__')->createView(),
+        ));
+    }
+
+
+    /**
+     * The method that is executed when the user performs a query on an entity.
+     *
+     * @return Response
+     */
+    protected function searchAction()
+    {
+        $this->dispatch(EasyAdminEvents::PRE_SEARCH);
+
+        // if the search query is empty, redirect to the 'list' action
+        if ('' === $this->request->query->get('query')) {
+            $queryParameters = array_replace($this->request->query->all(), array('action' => 'list', 'query' => null));
+            $queryParameters = array_filter($queryParameters);
+
+            return $this->redirect($this->get('router')->generate('easyadmin', $queryParameters));
+        }
+
+        $searchableFields = $this->entity['search']['fields'];
+        $paginator = $this->findBy(
+            $this->entity['class'],
+            $this->request->query->get('query'),
+            $searchableFields,
+            $this->request->query->get('page', 1),
+            $this->config['list']['max_results'],
+            isset($this->entity['search']['sort']['field']) ? $this->entity['search']['sort']['field'] : $this->request->query->get('sortField'),
+            isset($this->entity['search']['sort']['direction']) ? $this->entity['search']['sort']['direction'] : $this->request->query->get('sortDirection'),
+            $this->entity['search']['dql_filter']
+        );
+        $fields = $this->entity['list']['fields'];
+
+        try {
+            /** @var  ResidentRepository $residentRepo */
+            $residentRepo = $this->getDoctrine()->getManager()->getRepository('\App\Entity\Resident');
+            $residentList = $residentRepo->getListActive();
+        } catch (\Exception $e) {
+            $residentList = null;
+        }
+
+        try {
+            /** @var  UserRepository $userRepo */
+            $userRepo = $this->getDoctrine()->getManager()->getRepository('\App\Entity\User');
+            $userList = $userRepo->getListActive();
+
+        } catch (\Exception $e) {
+            $userList = null;
+        }
+
+        try {
+            /** @var  MaisonneeRepository $maisonneeRepo */
+            $maisonneeRepo = $this->getDoctrine()->getManager()->getRepository('\App\Entity\Maisonnee');
+            $maisonneeList = $maisonneeRepo->getList();
+        } catch (\Exception $e) {
+            $maisonneeList = null;
+        }
+
+        $this->dispatch(EasyAdminEvents::POST_SEARCH, array(
+            'fields' => $fields,
+            'paginator' => $paginator,
+        ));
+
+        return $this->render($this->entity['templates']['list'], array(
+            'maisonneeList' => $maisonneeList,
+            'userList' => $userList,
+            'residentList' => $residentList,
+            'paginator' => $paginator,
+            'fields' => $fields,
+            'delete_form_template' => $this->createDeleteForm($this->entity['name'], '__id__')->createView(),
+        ));
     }
 
     /**
