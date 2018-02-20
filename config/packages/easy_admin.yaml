@@ -40,7 +40,8 @@ easy_admin:
             - label: 'Résidents'
               icon: 'users'
               children:
-                - { label: 'Présents', entity: 'Residents_actuels'}
+                - { label: 'Présents', entity: 'Residents_actuels', required_role: ["ROLE_ADMIN", "ROLE_EDUCATEUR"] }
+                - { label: 'Présents', entity: 'Residents_actuels_soignant', required_role: ["ROLE_SOIGNANT"] }
                 - { label: 'Sortis', entity: 'Residents_passes', required_role: ["ROLE_ADMIN"] }
             - { label: 'Personnel', entity: 'Personnel', icon: 'user', required_role: ["ROLE_ADMIN"] }
             - { label: 'Unités', entity: 'Maisonnee', icon: 'home', required_role: ["ROLE_ADMIN"] }
@@ -139,6 +140,39 @@ easy_admin:
                     - { property: 'maisonnee', label: 'Unité' }
                     - { property: 'isActive', type: 'checkbox', label: 'Résident présent' }
                     #- { property: 'password', type: 'repeated', type_options: { first_options: { label: 'Mot de P' }, second_options: { label: 'Confirmer Mot de P' }, required: false } }
+        Residents_actuels_soignant:
+            label: 'Résidents présents'
+            title: 'Résidents présents'
+            class: App\Entity\Resident
+            disabled_actions: ['new', 'delete']
+            show:
+                title: 'Fiche Résident'
+                fields:
+                    - nom
+                    - { property: 'prenom', label: 'Prénom'}
+                    - { property: 'image', type: 'image', base_path: '%app.path.resident_images%', label: 'Photo' }
+                    - { property: 'description', label: 'Fiche Administrative'}
+                    - { property: 'ficheAlimentaire', label: 'Fiche Alimentaire'}
+                    - { property: 'ficheMedicale', label: 'Fiche Médicale'}
+                    - { property: 'maisonnee', label: 'Unité' }
+                    - { property: 'isActive', label: 'Résident présent' }
+            list:
+                title: 'Liste des résidents'
+                dql_filter: 'entity.isActive = 1'
+                fields:
+                    - { property: 'image', type: 'image', base_path: '%app.path.resident_images%', label: 'Photo' }
+                    - nom
+                    - { property: 'prenom', label: 'Prénom'}
+                    - { property: 'description', label: 'Fiche Administrative'}
+                    - { property: 'ficheAlimentaire', label: 'Fiche Alimentaire'}
+                    - { property: 'ficheMedicale', label: 'Fiche Médicale'}
+                    - { property: 'maisonnee', label: 'Unité' }
+            form:
+                title: 'Formulaire Résident'
+                fields:
+                    - { property: 'description', label: 'Fiche Administrative'}
+                    - { property: 'ficheAlimentaire', label: 'Fiche Alimentaire'}
+                    - { property: 'ficheMedicale', label: 'Fiche Médicale'}
 
         Residents_passes:
             label: 'Résidents sortis'
