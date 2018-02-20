@@ -151,7 +151,11 @@ class AdminController extends EasyAdminExtensionBundle
             if ($type == 'Educative' && !empty($transmission->getAlerteSoin())) {
                 $mappedTransmission['borderColor'] = 'red';
             }
-            array_push($listForCalendar, $mappedTransmission);
+            if($type == 'Soin' && in_array('ROLE_EDUCATEUR', $this->getUser()->getRoles())) {
+                //Do not display the Transmission Soin
+            } else {
+                array_push($listForCalendar, $mappedTransmission);
+            }
         }
 
         return new JsonResponse($listForCalendar);
