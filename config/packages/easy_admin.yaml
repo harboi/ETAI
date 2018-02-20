@@ -34,7 +34,7 @@ easy_admin:
             - label: 'Transmission'
               icon: 'file'
               children:
-                - { label: 'Soins', entity: 'Soin' }
+                - { label: 'Soins', entity: 'Soin', required_role: ["ROLE_ADMIN", "ROLE_SOIGNANT"] }
                 - { label: 'Educatives', entity: 'Educative' }
                 - { label: 'Générale', entity: 'Generique', required_role: ["ROLE_ADMIN"] }
             - label: 'Résidents'
@@ -42,7 +42,7 @@ easy_admin:
               children:
                 - { label: 'Présents', entity: 'Residents_actuels'}
                 - { label: 'Sortis', entity: 'Residents_passes', required_role: ["ROLE_ADMIN"] }
-            - { label: 'Personnel', entity: 'Personnel', icon: 'user' }
+            - { label: 'Personnel', entity: 'Personnel', icon: 'user', required_role: ["ROLE_ADMIN"] }
             - { label: 'Unités', entity: 'Maisonnee', icon: 'home', required_role: ["ROLE_ADMIN"] }
     formats:
         date:     'd/m/Y'
@@ -196,6 +196,7 @@ easy_admin:
                 fields:
                     - { property: 'createdAt', label: 'Date' }
                     #- { property: 'name', label: 'Descriptif court' }
+                    - { property: 'resident.image', type: 'image', base_path: '%app.path.resident_images%', label: 'Photo' }
                     - { property: 'resident', label: 'Résident' }
                     - { property: 'user', label: 'Personnel' }
                     - { property: 'maisonnee', label: 'Unité' }
@@ -230,6 +231,7 @@ easy_admin:
                 fields:
                     - { property: 'createdAt', label: 'Date' }
                     #- { property: 'name', label: 'Descriptif court' }
+                    - { property: 'resident.image', type: 'image', base_path: '%app.path.resident_images%', label: 'Photo' }
                     - { property: 'resident', label: 'Résident' }
                     - { property: 'user', label: 'Personnel' }
                     - { property: 'maisonnee', label: 'Unité' }

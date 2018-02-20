@@ -163,6 +163,7 @@ page: app.request.get('page', 1)
                     {% if easyadmin_action_is_enabled_for_list_view('new', _entity_config.name) %}
                         {% if ('ROLE_ADMIN' in userRoles)
                            or (('Soin' == _entity_config.name) and ('ROLE_SOIGNANT' in userRoles))
+                           or (('Educative' == _entity_config.name) and ('ROLE_SOIGNANT' in userRoles))
                            or (('Educative' == _entity_config.name) and ('ROLE_EDUCATEUR' in userRoles)) %}
                             {% set _action = easyadmin_get_action_for_list_view('new', _entity_config.name) %}
                             {% block new_action %}
@@ -191,6 +192,9 @@ page: app.request.get('page', 1)
             {% block table_head %}
                 <tr>
                     {% for field, metadata in fields %}
+                        {% if _entity_config.name == 'Residents_actuels' and field == 'ficheMedicale' and 'ROLE_EDUCATEUR' in userRoles %}
+                            {# display nothing #}
+                        {% else %}
                         {% set isSortingField = metadata.property == app.request.get('sortField')|split('.')|first %}
                         {% set nextSortDirection = isSortingField ? (app.request.get('sortDirection') == 'DESC' ? 'ASC' : 'DESC') : 'DESC' %}
                         {% set _column_label = (metadata.label ?: field|humanize)|trans(_trans_parameters) %}
@@ -207,8 +211,8 @@ page: app.request.get('page', 1)
                                 <span>{{ _column_label|raw }}</span>
                             {% endif %}
                         </th>
+                        {% endif %}
                     {% endfor %}
-
                     {% if _list_item_actions|length > 0 %}
                         <th>
                             <span>{{ 'list.row_actions'|trans(_trans_parameters, 'EasyAdminBundle') }}</span>
@@ -226,13 +230,16 @@ page: app.request.get('page', 1)
                     {% set _item_owner = item.owner|default('0') %}
                     <tr data-id="{{ _item_id }}">
                         {% for field, metadata in fields %}
+                        {% if _entity_config.name == 'Residents_actuels' and field == 'ficheMedicale' and 'ROLE_EDUCATEUR' in userRoles %}
+                            {# display nothing #}
+                        {% else %}
                             {% set isSortingField = metadata.property == app.request.get('sortField') %}
                             {% set _column_label =  (metadata.label ?: field|humanize)|trans(_trans_parameters) %}
-
                             <td data-label="{{ _column_label }}"
                                 class="{{ isSortingField ? 'sorted' }} {{ metadata.dataType|lower }} {{ metadata.css_class }}">
                                 {{ easyadmin_render_field_for_list_view(_entity_config.name, item, metadata) }}
                             </td>
+                        {% endif %}
                         {% endfor %}
 
                         {% if _list_item_actions|length > 0 %}

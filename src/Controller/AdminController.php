@@ -110,7 +110,7 @@ class AdminController extends EasyAdminExtensionBundle
             $maisonneeList = null;
         }
 
-        return $this->render('calendar.html.twig', ['maisonneeList' => $maisonneeList, 'userList' => $userList, 'residentList' => $residentList ]);
+        return $this->render('calendar.html.twig', ['maisonneeList' => $maisonneeList, 'userList' => $userList, 'residentList' => $residentList]);
     }
 
     /**
@@ -139,16 +139,16 @@ class AdminController extends EasyAdminExtensionBundle
         $listForCalendar = array();
         /** @var  Transmission $transmission */
         foreach ($transmissionList as $transmission) {
-            $type = $transmission->getType() ? 'Soin':'Educative';
-            $url = "./?action=show&entity=$type&id=".$transmission->getId();
+            $type = $transmission->getType() ? 'Soin' : 'Educative';
+            $url = "./?action=show&entity=$type&id=" . $transmission->getId();
             $residentName = ($transmission->getResident()) ? $transmission->getResident()->__toString() : 'Aucun(e)';
             $mappedTransmission = [
                 'start' => $transmission->getCreatedAt()->format('Y-m-d H:i:s'),
                 'title' => $residentName,
                 'url' => $url,
-                'color' => ($type == 'Educative') ? '#16a085':'#d35400'
+                'color' => ($type == 'Educative') ? '#16a085' : '#d35400'
             ];
-            if($type == 'Educative' && !empty($transmission->getAlerteSoin())) {
+            if ($type == 'Educative' && !empty($transmission->getAlerteSoin())) {
                 $mappedTransmission['borderColor'] = 'red';
             }
             array_push($listForCalendar, $mappedTransmission);
@@ -165,7 +165,6 @@ class AdminController extends EasyAdminExtensionBundle
         }
 
         if (method_exists($entity, 'setUser')) {
-            // transmission educative = 0
             $entity->setUser($this->getUser());
         }
     }
@@ -173,12 +172,11 @@ class AdminController extends EasyAdminExtensionBundle
     public function prePersistSoinEntity($entity)
     {
         if (method_exists($entity, 'setType')) {
-            // transmission soin = 0
+            // transmission soin = 1
             $entity->setType(true);
         }
 
         if (method_exists($entity, 'setUser')) {
-            // transmission soin = 0
             $entity->setUser($this->getUser());
         }
     }
@@ -328,6 +326,34 @@ class AdminController extends EasyAdminExtensionBundle
             'paginator' => $paginator,
             'fields' => $fields,
             'delete_form_template' => $this->createDeleteForm($this->entity['name'], '__id__')->createView(),
+        ));
+    }
+
+    protected function showAction()
+    {
+        $this->dispatch(EasyAdminEvents::PRE_SHOW);
+
+        $id = $this->request->query->get('id');
+        $easyadmin = $this->request->attributes->get('easyadmin');
+        $entity = $easyadmin['item'];
+
+        if ($entity == 'Soin') {
+
+        }
+
+        $fields = $this->entity['show']['fields'];
+        $deleteForm = $this->createDeleteForm($this->entity['name'], $id);
+
+        $this->dispatch(EasyAdminEvents::POST_SHOW, array(
+            'deleteForm' => $deleteForm,
+            'fields' => $fields,
+            'entity' => $entity,
+        ));
+
+        return $this->render($this->entity['templates']['show'], array(
+            'entity' => $entity,
+            'fields' => $fields,
+            'delete_form' => $deleteForm->createView(),
         ));
     }
 
