@@ -19,6 +19,9 @@
 {% block main %}
     <div class="form-horizontal">
         {% for field, metadata in fields %}
+        {% if _entity_config.name == 'Residents_actuels' and field == 'ficheMedicale' and 'ROLE_EDUCATEUR' in userRoles %}
+        {# display nothing #}
+        {% else %}
             <div class="form-group field-{{ metadata.type|default('default')|lower }} {{ metadata.css_class|default('') }}">
                 <label class="col-sm-2 control-label">
                     {{ (metadata.label ?: field|humanize)|trans(_trans_parameters)|raw }}
@@ -33,6 +36,7 @@
                     {% endif %}
                 </div>
             </div>
+        {% endif %}
         {% endfor %}
 
         <div class="form-group form-actions">
