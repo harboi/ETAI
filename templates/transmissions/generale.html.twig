@@ -8,7 +8,7 @@
 
         <div class="col-xs-12 col-sm-12 col-md-8 transmission">
             <strong class="transmission-{{ transmission.statut|default('') }}">{{ transmission.statut|default('') }}
-                - {{ transmission.maisonnee|default('Toutes les maisonnées') }}</strong>
+                - {{ transmission.maisonnee|default('Général(e)') }}</strong>
             <p>{{ transmission.message|nl2br }}</p>
             <br>
             <a class="hidden-print" href="./?action=show&entity=Generique&id={{ transmission.id }}">
