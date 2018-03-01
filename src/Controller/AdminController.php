@@ -22,6 +22,8 @@ use JavierEguiluz\Bundle\EasyAdminBundle\Exception\EntityRemoveException;
 use JavierEguiluz\Bundle\EasyAdminBundle\Exception\ForbiddenActionException;
 use JavierEguiluz\Bundle\EasyAdminBundle\Exception\NoEntitiesConfiguredException;
 use JavierEguiluz\Bundle\EasyAdminBundle\Exception\UndefinedEntityException;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -183,6 +185,59 @@ class AdminController extends EasyAdminExtensionBundle
         if (method_exists($entity, 'setUser')) {
             $entity->setUser($this->getUser());
         }
+    }
+
+    public function editAction()
+    {
+        $this->dispatch(EasyAdminEvents::PRE_EDIT);
+
+        $id = $this->request->query->get('id');
+        $easyadmin = $this->request->attributes->get('easyadmin');
+        $entity = $easyadmin['item'];
+
+        if (method_exists($entity, 'setPassword')) {
+            $entity->setPassword('');
+        }
+
+        if ($this->request->isXmlHttpRequest() && $property = $this->request->query->get('property')) {
+            $newValue = 'true' === mb_strtolower($this->request->query->get('newValue'));
+            $fieldsMetadata = $this->entity['list']['fields'];
+
+            if (!isset($fieldsMetadata[$property]) || 'toggle' !== $fieldsMetadata[$property]['dataType']) {
+                throw new \RuntimeException(sprintf('The type of the "%s" property is not "toggle".', $property));
+            }
+
+            $this->updateEntityProperty($entity, $property, $newValue);
+
+            // cast to integer instead of string to avoid sending empty responses for 'false'
+            return new Response((int) $newValue);
+        }
+
+        $fields = $this->entity['edit']['fields'];
+
+        $editForm = $this->executeDynamicMethod('create<EntityName>EditForm', array($entity, $fields));
+        $deleteForm = $this->createDeleteForm($this->entity['name'], $id);
+
+        $editForm->handleRequest($this->request);
+        if ($editForm->isSubmitted() && $editForm->isValid()) {
+            $this->dispatch(EasyAdminEvents::PRE_UPDATE, array('entity' => $entity));
+
+            $this->executeDynamicMethod('preUpdate<EntityName>Entity', array($entity));
+            $this->em->flush();
+
+            $this->dispatch(EasyAdminEvents::POST_UPDATE, array('entity' => $entity));
+
+            return $this->redirectToReferrer();
+        }
+
+        $this->dispatch(EasyAdminEvents::POST_EDIT);
+
+        return $this->render($this->entity['templates']['edit'], array(
+            'form' => $editForm->createView(),
+            'entity_fields' => $fields,
+            'entity' => $entity,
+            'delete_form' => $deleteForm->createView(),
+        ));
     }
 
     public function prePersistPersonnelEntity($entity)
