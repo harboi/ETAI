@@ -249,7 +249,6 @@ page: app.request.get('page', 1)
 
                                     {% for action in _list_item_actions %}
                                         {% if ('ROLE_ADMIN' in userRoles)
-                                            or (_item_owner == app.user.id)
                                             or not (('edit' == action.name)
                                             or ('delete' == action.name))
                                             or (('Residents_actuels_soignant' == _entity_config.name) and ('ROLE_SOIGNANT' in userRoles)) %}
