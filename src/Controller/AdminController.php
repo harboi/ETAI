@@ -68,21 +68,6 @@ class AdminController extends EasyAdminExtensionBundle
     }
 
     /**
-     * @Route("/alerteSoin", name="alerteSoin")
-     */
-    public function alerteSoinAction()
-    {
-        try {
-            /** @var  TransmissionRepository $repo */
-            $repo = $this->getDoctrine()->getManager()->getRepository('\App\Entity\Transmission');
-            $list = $repo->getListWithAlerteSoin();
-        } catch (\Exception $e) {
-            $list = 'error';
-        }
-        return $this->render('alerteSoin.html.twig', ['transmissions' => $list]);
-    }
-
-    /**
      * @Route("/calendrier", name="calendar")
      */
     public function calendarAction()
@@ -347,6 +332,25 @@ class AdminController extends EasyAdminExtensionBundle
      */
     protected function listAction()
     {
+        $currentEntity = $this->entity['name'];
+
+        if(in_array('ROLE_EDUCATEUR', $this->getUser()->getRoles())) {
+            if('Maisonnee' == $currentEntity
+                || 'Personnel' == $currentEntity
+                || 'Residents_passes' == $currentEntity
+                || 'Soin' == $currentEntity) {
+                return $this->redirectToBackendHomepage();
+            }
+        }
+
+        if(in_array('ROLE_SOIGNANT', $this->getUser()->getRoles())) {
+            if('Maisonnee' == $currentEntity
+                || 'Personnel' == $currentEntity
+                || 'Residents_passes' == $currentEntity) {
+                return $this->redirectToBackendHomepage();
+            }
+        }
+
         $this->dispatch(EasyAdminEvents::PRE_LIST);
 
         $fields = $this->entity['list']['fields'];
@@ -390,15 +394,30 @@ class AdminController extends EasyAdminExtensionBundle
 
     protected function showAction()
     {
+        $currentEntity = $this->entity['name'];
+
+        if(in_array('ROLE_EDUCATEUR', $this->getUser()->getRoles())) {
+            if('Maisonnee' == $currentEntity
+                || 'Personnel' == $currentEntity
+                || 'Residents_passes' == $currentEntity
+                || 'Soin' == $currentEntity) {
+                return $this->redirectToBackendHomepage();
+            }
+        }
+
+        if(in_array('ROLE_SOIGNANT', $this->getUser()->getRoles())) {
+            if('Maisonnee' == $currentEntity
+                || 'Personnel' == $currentEntity
+                || 'Residents_passes' == $currentEntity) {
+                return $this->redirectToBackendHomepage();
+            }
+        }
+
         $this->dispatch(EasyAdminEvents::PRE_SHOW);
 
         $id = $this->request->query->get('id');
         $easyadmin = $this->request->attributes->get('easyadmin');
         $entity = $easyadmin['item'];
-
-        if ($entity == 'Soin') {
-
-        }
 
         $fields = $this->entity['show']['fields'];
         $deleteForm = $this->createDeleteForm($this->entity['name'], $id);
