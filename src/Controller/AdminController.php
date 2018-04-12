@@ -138,7 +138,7 @@ class AdminController extends EasyAdminExtensionBundle
             if ($type == 'Educative' && !empty($transmission->getAlerteSoin())) {
                 $mappedTransmission['borderColor'] = 'red';
             }
-            if($type == 'Soin' && in_array('ROLE_EDUCATEUR', $this->getUser()->getRoles())) {
+            if ($type == 'Soin' && in_array('ROLE_EDUCATEUR', $this->getUser()->getRoles())) {
                 //Do not display the Transmission Soin
             } else {
                 array_push($listForCalendar, $mappedTransmission);
@@ -172,8 +172,46 @@ class AdminController extends EasyAdminExtensionBundle
         }
     }
 
+    protected function newAction()
+    {
+        $currentEntityName = $this->entity['name'];
+        if (in_array('ROLE_SOIGNANT', $this->getUser()->getRoles())) {
+            if ('Soin' == $currentEntityName || 'Educative' == $currentEntityName) {
+                // allow new action
+            } else {
+                return $this->redirectToBackendHomepage();
+            }
+        } elseif (in_array('ROLE_EDUCATEUR', $this->getUser()->getRoles())) {
+            if ('Educative' == $currentEntityName) {
+                // allow new action
+            } else {
+                return $this->redirectToBackendHomepage();
+            }
+        } elseif (!in_array('ROLE_ADMIN', $this->getUser()->getRoles())) {
+            return $this->redirectToBackendHomepage();
+        }
+
+        return parent::newAction();
+    }
+
+    protected function deleteAction()
+    {
+        if (!in_array('ROLE_ADMIN', $this->getUser()->getRoles())) {
+            return $this->redirectToBackendHomepage();
+        }
+
+        return parent::deleteAction();
+    }
+
     public function editAction()
     {
+        $currentEntityName = $this->entity['name'];
+        if (in_array('ROLE_SOIGNANT', $this->getUser()->getRoles()) && 'Residents_actuels_soignant' == $currentEntityName) {
+            // allow edit action for SOIGNANT on Resident_actuels_soignants (only Fiche Administrative, Fiche Alimentaire, Fiche Médicale)
+        } elseif (!in_array('ROLE_ADMIN', $this->getUser()->getRoles())) {
+            return $this->redirectToBackendHomepage();
+        }
+
         $this->dispatch(EasyAdminEvents::PRE_EDIT);
 
         $id = $this->request->query->get('id');
@@ -195,7 +233,7 @@ class AdminController extends EasyAdminExtensionBundle
             $this->updateEntityProperty($entity, $property, $newValue);
 
             // cast to integer instead of string to avoid sending empty responses for 'false'
-            return new Response((int) $newValue);
+            return new Response((int)$newValue);
         }
 
         $fields = $this->entity['edit']['fields'];
@@ -332,21 +370,22 @@ class AdminController extends EasyAdminExtensionBundle
      */
     protected function listAction()
     {
-        $currentEntity = $this->entity['name'];
+        $currentEntityName = $this->entity['name'];
 
-        if(in_array('ROLE_EDUCATEUR', $this->getUser()->getRoles())) {
-            if('Maisonnee' == $currentEntity
-                || 'Personnel' == $currentEntity
-                || 'Residents_passes' == $currentEntity
-                || 'Soin' == $currentEntity) {
+        if (in_array('ROLE_EDUCATEUR', $this->getUser()->getRoles())) {
+            if ('Maisonnee' == $currentEntityName
+                || 'Personnel' == $currentEntityName
+                || 'Residents_passes' == $currentEntityName
+                || 'Soin' == $currentEntityName) {
                 return $this->redirectToBackendHomepage();
             }
         }
 
-        if(in_array('ROLE_SOIGNANT', $this->getUser()->getRoles())) {
-            if('Maisonnee' == $currentEntity
-                || 'Personnel' == $currentEntity
-                || 'Residents_passes' == $currentEntity) {
+        if (in_array('ROLE_SOIGNANT', $this->getUser()->getRoles())) {
+            if ('Maisonnee' == $currentEntityName
+                || 'Personnel' == $currentEntityName
+                || 'Residents_actuels' == $currentEntityName
+                || 'Residents_passes' == $currentEntityName) {
                 return $this->redirectToBackendHomepage();
             }
         }
@@ -394,21 +433,21 @@ class AdminController extends EasyAdminExtensionBundle
 
     protected function showAction()
     {
-        $currentEntity = $this->entity['name'];
+        $currentEntityName = $this->entity['name'];
 
-        if(in_array('ROLE_EDUCATEUR', $this->getUser()->getRoles())) {
-            if('Maisonnee' == $currentEntity
-                || 'Personnel' == $currentEntity
-                || 'Residents_passes' == $currentEntity
-                || 'Soin' == $currentEntity) {
+        if (in_array('ROLE_EDUCATEUR', $this->getUser()->getRoles())) {
+            if ('Maisonnee' == $currentEntityName
+                || 'Personnel' == $currentEntityName
+                || 'Residents_passes' == $currentEntityName
+                || 'Soin' == $currentEntityName) {
                 return $this->redirectToBackendHomepage();
             }
         }
 
-        if(in_array('ROLE_SOIGNANT', $this->getUser()->getRoles())) {
-            if('Maisonnee' == $currentEntity
-                || 'Personnel' == $currentEntity
-                || 'Residents_passes' == $currentEntity) {
+        if (in_array('ROLE_SOIGNANT', $this->getUser()->getRoles())) {
+            if ('Maisonnee' == $currentEntityName
+                || 'Personnel' == $currentEntityName
+                || 'Residents_passes' == $currentEntityName) {
                 return $this->redirectToBackendHomepage();
             }
         }
